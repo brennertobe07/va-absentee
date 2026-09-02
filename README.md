@@ -7,7 +7,7 @@ INSTANCE-1 and pushed to this repo.
 
 ```
 index.html                      ← the dashboard (single-file app)
-build_april_absentee_json.py    ← run this locally to refresh data
+build_absentee_json.py    ← run this locally to refresh data
 data/
   summary.json                  ← statewide totals
   counties.json                 ← one row per county
@@ -17,15 +17,15 @@ data/
 
 ## First-time setup
 
-1. Create a GitHub repo (e.g. `april-referendum-absentee`)
+1. Create a GitHub repo (e.g. `va-absentee`)
 2. Copy all files from this starter into it
 3. Enable GitHub Pages:
    - Repo → Settings → Pages
    - Source: **Deploy from a branch** → `main` / `(root)`
-4. Open `build_april_absentee_json.py` and set `REPO_ROOT` to the local path
+4. Open `build_absentee_json.py` and set `REPO_ROOT` to the local path
    where you cloned the repo, e.g.:
    ```python
-   REPO_ROOT = r"C:\Users\YourName\Documents\GitHub\april-referendum-absentee"
+   REPO_ROOT = r"C:\Users\YourName\Documents\GitHub\va-absentee"
    ```
 5. Install dependencies if needed:
    ```
@@ -38,13 +38,13 @@ Each morning (or whenever you want to update):
 
 1. Run the Python script:
    ```
-   py -3.12 build_april_absentee_json.py
+   py -3.12 build_absentee_json.py
    ```
 2. Open GitHub Desktop
 3. Commit the changed `data/*.json` files
 4. Push to origin
 
-The live dashboard at `https://brennertobe07.github.io/april-referendum-absentee/`
+The live dashboard at `https://brennertobe07.github.io/va-absentee/`
 will update within ~1 minute.
 
 ## Dashboard features

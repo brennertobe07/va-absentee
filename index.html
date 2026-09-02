@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>April Referendum — Absentee Tracker</title>
+<title>2026 November General — Absentee Tracker</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -752,7 +752,7 @@ UDk/hX7zfCL/AINOPhd4dngm8YePfFPiXy23SW1pDFYwy/8AAhlx+dfcf7MH/BLT4F/sg+VJ4K+H
 2h2mpRgA6ldRC7vWPqZZMn8sVx1+JcPBP2SuzrocOVpP95ofh9/wTj/4N5Pir+15qOna58QLe6+G
 3gEssrtdwAapqMfUrBCf9WD/AM9HAPOQua/fz9lr9lDwP+xx8JdP8F+AdCtdE0SwGcIMy3Eh+9LK
 55d2PUmvSI4Qh6AY54qTGcV8nj8zr4p++9D6fBZbSwy91XYxRhafQ3Q0V5yVtD0tep//2Q==" alt="VA Dems" style="height:36px;background:#fff;border-radius:6px;padding:3px 8px;opacity:0.95;">
-    <h1><span>April Referendum</span> — Absentee Tracker</h1>
+    <h1><span>2026 November General</span> — Absentee Tracker</h1>
     <div class="top-tabs">
       <button class="top-tab active" data-tab="summary">Summary</button>
       <button class="top-tab" data-tab="trends">Daily Trends</button>
@@ -784,7 +784,8 @@ let currentTab    = 'summary';
 let currentCounty = null;
 let charts = {};
 
-const ELECTION_DAY = new Date('2026-04-21');
+// Fallback only - the real value comes from data/metadata.json at load time.
+let ELECTION_DAY = new Date('2026-11-03');
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 async function loadData() {
@@ -801,10 +802,20 @@ async function loadData() {
 
     document.getElementById('last-updated').textContent = `Updated: ${meta.last_updated}`;
 
+    // Election identity is data-driven so a new cycle needs no HTML edits.
+    if (meta.election_day) ELECTION_DAY = new Date(meta.election_day);
+    if (meta.election_label) {
+      document.title = `${meta.election_label} — Absentee Tracker`;
+      const h = document.querySelector('h1 span');
+      if (h) h.textContent = meta.election_label;
+    }
+
     const today = new Date();
     const days  = Math.ceil((ELECTION_DAY - today) / 86400000);
     document.getElementById('days-remaining').textContent =
-      days > 0 ? `${days} days to election` : 'Election Day';
+      meta.election_day
+        ? (days > 0 ? `${days} days to election` : 'Election Day')
+        : '';
 
     buildSidebar();
     renderView();

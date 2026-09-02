@@ -1,9 +1,14 @@
 """
-build_april_absentee_json.py
+build_absentee_json.py
 Queries absentee.dbo on INSTANCE-1 and writes JSON files
-for the April Referendum Absentee Dashboard hosted on GitHub Pages.
+for the DPVA Absentee Dashboard hosted on GitHub Pages.
 
-Run: py -3.12 build_april_absentee_json.py
+The election is auto-detected from Daily_Absentee_List, and the election day
+and page label are written into data/metadata.json, which index.html reads at
+load time. Switching cycles means updating ELECTION_CONFIG below - nothing in
+the HTML needs to change.
+
+Run: py -3.12 build_absentee_json.py
 """
 
 import pyodbc
@@ -17,8 +22,31 @@ SERVER      = r"INSTANCE-1"
 DATABASE    = "absentee"
 ODBC_DRIVER = "ODBC Driver 17 for SQL Server"
 
-REPO_ROOT   = r"C:\Scripts\Python\Python_Absentee\April\april-referendum-absentee"
+REPO_ROOT   = r"C:\Scripts\Python\Python_Absentee\dashboards\va-absentee"
 DATA_DIR    = os.path.join(REPO_ROOT, "data")
+
+# Per-cycle settings, keyed by the ELECTION_NAME that VA SBE puts in
+# Daily_Absentee_List. Add an entry at the start of each cycle.
+#
+#   election_day - drives the countdown in index.html
+#   label        - page title / header text
+#   cycle_start  - first day of early voting (46 days out, matching the April
+#                  convention). Ballots received before this are binned onto it
+#                  so a handful of early UOCAVA returns don't stretch the daily
+#                  chart across months.
+ELECTION_CONFIG = {
+    "2026 November General": {
+        "election_day": "2026-11-03",
+        "label":        "2026 November General",
+        "cycle_start":  "2026-09-18",
+    },
+    "2026 April 21 Special": {
+        "election_day": "2026-04-21",
+        "label":        "April Referendum",
+        "cycle_start":  "2026-03-06",
+    },
+}
+DEFAULT_LABEL = "Absentee Tracker"
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_election_name(conn):
@@ -69,20 +97,20 @@ SELECT
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NOT NULL
              AND dal.BALLOT_STATUS IN ('Marked','Pre-Processed','On Machine')
              AND (van.likelyparty IN ('sd','ld')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 >= 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore >= 50))
              THEN 1 ELSE 0 END) AS DemVotedCount,
 
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NOT NULL
              AND dal.BALLOT_STATUS IN ('Marked','Pre-Processed','On Machine')
              AND (van.likelyparty IN ('sr','lr')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 < 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore < 50))
              THEN 1 ELSE 0 END) AS RepVotedCount,
 
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NOT NULL
              AND dal.BALLOT_STATUS IN ('Marked','Pre-Processed','On Machine')
              AND (van.likelyparty IS NULL
                  OR van.likelyparty NOT IN ('sd','ld','sr','lr','nd','U','I')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 IS NULL))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore IS NULL))
              THEN 1 ELSE 0 END) AS UnknownVotedCount,
 
     -- In-person vs mail breakdown
@@ -90,35 +118,35 @@ SELECT
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed') THEN 1 ELSE 0 END) AS MailCount,
     SUM(CASE WHEN dal.BALLOT_STATUS = 'On Machine'
              AND (van.likelyparty IN ('sd','ld')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 >= 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore >= 50))
              THEN 1 ELSE 0 END) AS InPersonDem,
     SUM(CASE WHEN dal.BALLOT_STATUS = 'On Machine'
              AND (van.likelyparty IN ('sr','lr')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 < 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore < 50))
              THEN 1 ELSE 0 END) AS InPersonRep,
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed')
              AND (van.likelyparty IN ('sd','ld')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 >= 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore >= 50))
              THEN 1 ELSE 0 END) AS MailDem,
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed')
              AND (van.likelyparty IN ('sr','lr')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 < 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore < 50))
              THEN 1 ELSE 0 END) AS MailRep,
 
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NULL AND dal.ONGOING = 'True'
              AND (van.likelyparty IN ('sd','ld')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 >= 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore >= 50))
              THEN 1 ELSE 0 END) AS DemOutCount,
 
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NULL AND dal.ONGOING = 'True'
              AND (van.likelyparty IN ('sr','lr')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 < 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore < 50))
              THEN 1 ELSE 0 END) AS RepOutCount,
 
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NULL AND dal.ONGOING = 'True'
              AND (van.likelyparty IS NULL
                  OR van.likelyparty NOT IN ('sd','ld','sr','lr','nd','U','I')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 IS NULL))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore IS NULL))
              THEN 1 ELSE 0 END) AS UnknownOutCount
 
 FROM van
@@ -134,7 +162,7 @@ ORDER BY COALESCE(van.CountyName, ct.CountyName),
          COALESCE(van.PrecinctName, dal.PRECINCT_NAME);
 """
 
-def build_daily_query(election_name):
+def build_daily_query(election_name, cycle_start):
     return f"""
 -- Deduplicate Daily_Absentee_List: one row per voter, most resolved status wins.
 WITH dal_deduped AS (
@@ -157,15 +185,15 @@ WITH dal_deduped AS (
 )
 SELECT
     CASE
-        WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '2026-03-06'
-        THEN CAST('2026-03-06' AS DATE)
+        WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '{cycle_start}'
+        THEN CAST('{cycle_start}' AS DATE)
         ELSE CAST(dal.BALLOT_RECEIPT_DATE AS DATE)
     END AS ReturnDate,
 
     DATENAME(WEEKDAY,
         CASE
-            WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '2026-03-06'
-            THEN CAST('2026-03-06' AS DATE)
+            WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '{cycle_start}'
+            THEN CAST('{cycle_start}' AS DATE)
             ELSE CAST(dal.BALLOT_RECEIPT_DATE AS DATE)
         END
     ) AS DayOfWeek,
@@ -175,31 +203,31 @@ SELECT
     SUM(CASE WHEN dal.BALLOT_STATUS = 'On Machine' THEN 1 ELSE 0 END) AS InPersonTotal,
     SUM(CASE WHEN dal.BALLOT_STATUS = 'On Machine'
              AND (van.likelyparty IN ('sd','ld')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 >= 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore >= 50))
              THEN 1 ELSE 0 END) AS InPersonDem,
     SUM(CASE WHEN dal.BALLOT_STATUS = 'On Machine'
              AND (van.likelyparty IN ('sr','lr')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 < 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore < 50))
              THEN 1 ELSE 0 END) AS InPersonRep,
     SUM(CASE WHEN dal.BALLOT_STATUS = 'On Machine'
              AND (van.likelyparty IS NULL
                  OR van.likelyparty NOT IN ('sd','ld','sr','lr','nd','U','I')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 IS NULL))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore IS NULL))
              THEN 1 ELSE 0 END) AS InPersonUnknown,
 
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed') THEN 1 ELSE 0 END) AS MailTotal,
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed')
              AND (van.likelyparty IN ('sd','ld')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 >= 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore >= 50))
              THEN 1 ELSE 0 END) AS MailDem,
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed')
              AND (van.likelyparty IN ('sr','lr')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 < 50))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore < 50))
              THEN 1 ELSE 0 END) AS MailRep,
     SUM(CASE WHEN dal.BALLOT_STATUS IN ('Marked','Pre-Processed')
              AND (van.likelyparty IS NULL
                  OR van.likelyparty NOT IN ('sd','ld','sr','lr','nd','U','I')
-                 OR (van.likelyparty IN ('nd','U','I') AND van.Clarity_DemSupport_26 IS NULL))
+                 OR (van.likelyparty IN ('nd','U','I') AND van.SupportScore IS NULL))
              THEN 1 ELSE 0 END) AS MailUnknown
 
 FROM van
@@ -213,14 +241,14 @@ WHERE dal.rn = 1
 
 GROUP BY
     CASE
-        WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '2026-03-06'
-        THEN CAST('2026-03-06' AS DATE)
+        WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '{cycle_start}'
+        THEN CAST('{cycle_start}' AS DATE)
         ELSE CAST(dal.BALLOT_RECEIPT_DATE AS DATE)
     END,
     DATENAME(WEEKDAY,
         CASE
-            WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '2026-03-06'
-            THEN CAST('2026-03-06' AS DATE)
+            WHEN CAST(dal.BALLOT_RECEIPT_DATE AS DATE) < '{cycle_start}'
+            THEN CAST('{cycle_start}' AS DATE)
             ELSE CAST(dal.BALLOT_RECEIPT_DATE AS DATE)
         END
     )
@@ -289,13 +317,22 @@ def main():
     election_name = get_election_name(conn)
     print(f"Election:  {election_name}")
 
+    cfg = ELECTION_CONFIG.get(election_name)
+    if cfg is None:
+        raise ValueError(
+            f"No ELECTION_CONFIG entry for {election_name!r}. "
+            f"Add one to build_absentee_json.py before running."
+        )
+    cycle_start = cfg["cycle_start"]
+    print(f"Cycle start: {cycle_start}  (earlier returns bin onto this date)")
+
     print("Running summary query ...")
     df = pd.read_sql(build_summary_query(election_name), conn)
     print(f"  {len(df):,} precinct rows")
     df = add_totals(df)
 
     print("Running daily trend query ...")
-    daily_df = pd.read_sql(build_daily_query(election_name), conn)
+    daily_df = pd.read_sql(build_daily_query(election_name, cycle_start), conn)
     print(f"  {len(daily_df):,} daily rows")
     conn.close()
 
@@ -313,9 +350,12 @@ def main():
     write_json(df_to_records(daily_df),                          os.path.join(DATA_DIR, "daily.json"))
 
     write_json({
-        "last_updated":  datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "source":        f"{SERVER} / {DATABASE}",
-        "election_day":  "2026-04-21",
+        "last_updated":   datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "source":         f"{SERVER} / {DATABASE}",
+        "election_name":  election_name,
+        "election_label": cfg.get("label", DEFAULT_LABEL),
+        "election_day":   cfg["election_day"],
+        "cycle_start":    cycle_start,
     },                                                           os.path.join(DATA_DIR, "metadata.json"))
 
     print("\nDone. Commit and push with GitHub Desktop to update the live dashboard.")

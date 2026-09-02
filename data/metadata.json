@@ -1,5 +1,8 @@
 {
-  "last_updated": "2026-05-12 07:00",
+  "last_updated": "2026-09-02 17:27",
   "source": "INSTANCE-1 / absentee",
-  "election_day": "2026-04-21"
+  "election_name": "2026 November General",
+  "election_label": "2026 November General",
+  "election_day": "2026-11-03",
+  "cycle_start": "2026-09-18"
 }
