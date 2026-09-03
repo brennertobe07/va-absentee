@@ -1031,8 +1031,15 @@ function buildCDCountyTable() {
   });
   html += '</tbody>';
   document.getElementById('cd-county-table').innerHTML = html;
+  // District totals count every ballot; the locality list drops sub-threshold
+  // strays, so show the gap rather than letting the columns quietly disagree.
+  const dist = (DATA.cds.districts || []).find(d => d.CD === cdSelected) || {};
+  const distTot = (dist.VotedCount || 0) + (dist.OutCount || 0);
+  const locTot  = rows.reduce((s, r) => s + (r.VotedCount || 0) + (r.OutCount || 0), 0);
+  const gap     = distTot - locTot;
   document.getElementById('cd-county-footer').textContent =
-    `${rows.length} localities — small non-target slivers suppressed`;
+    `${rows.length} localities — ${fmt(locTot)} of ${fmt(distTot)} ballots`
+    + (gap > 0 ? ` (${fmt(gap)} in localities below the ${DATA.cds.min_ballots || 10}-ballot floor)` : '');
 }
 
 // ── SUMMARY — STATEWIDE ───────────────────────────────────────────────────

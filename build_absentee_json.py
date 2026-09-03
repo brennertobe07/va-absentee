@@ -337,9 +337,15 @@ def aggregate_county_by_cd(df):
 
     The precinct -> CD attribution is exact (precincts do not split CDs), but
     CONG_CODE_VALUE itself is noisy: a county that is really one or two CDs
-    picks up single stray records in others. Same floor as the cure dashboard
-    - a county keeps its dominant row, other rows need MIN_CD_BALLOTS, and a
-    target-CD row is never dropped however small.
+    picks up single stray records in others. A county keeps its dominant row;
+    every other row needs MIN_CD_BALLOTS.
+
+    Unlike the cure dashboard there are NO exemptions here - not for target
+    CDs, and not for a county's dominant row. Cure records are scarce enough
+    that three of them in CD 02 is worth surfacing; ballots are not. And the
+    Summary tab already lists every county, so this view has no duty to make
+    each one appear; a county whose only ballots are strays should simply not
+    show up in a district it is not in.
     """
     grp_cols = NUM_COLS + ["VotedCount", "OutCount"]
     out = (
@@ -350,15 +356,7 @@ def aggregate_county_by_cd(df):
     out["Ballots"] = out["VotedCount"] + out["OutCount"]
     out = out[out["Ballots"] > 0]
 
-    keep = []
-    for _, grp in out.groupby("CountyName"):
-        grp = grp.sort_values("Ballots", ascending=False)
-        for i, (_, row) in enumerate(grp.iterrows()):
-            if i == 0 or row["Ballots"] >= MIN_CD_BALLOTS or row["CD"] in TARGET_CDS:
-                keep.append(row)
-    if not keep:
-        return out.drop(columns=["Ballots"]).sort_values(["CD", "CountyName"])
-    kept = pd.DataFrame(keep).drop(columns=["Ballots"])
+    kept = out[out["Ballots"] >= MIN_CD_BALLOTS].drop(columns=["Ballots"])
     return kept.sort_values(["CD", "CountyName"])
 
 
@@ -405,6 +403,7 @@ def main():
     cd_df = aggregate_cds(df)
     write_json({
         "targets":     TARGET_CDS,
+        "min_ballots": MIN_CD_BALLOTS,
         "districts":   df_to_records(cd_df),
         "by_county":   df_to_records(aggregate_county_by_cd(df)),
     },                                                           os.path.join(DATA_DIR, "cds.json"))
