@@ -46,6 +46,13 @@ ELECTION_CONFIG = {
         "cycle_start":  "2026-03-06",
     },
 }
+# Congressional districts targeted this cycle. Drives the By CD tab.
+TARGET_CDS = ["01", "02", "05"]
+
+# CONG_CODE_VALUE carries stray records; county x CD rows below this many
+# ballots are suppressed unless they are a county's dominant row or a target.
+MIN_CD_BALLOTS = 10
+
 DEFAULT_LABEL = "Absentee Tracker"
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -92,6 +99,7 @@ WITH dal_deduped AS (
 SELECT
     COALESCE(van.CountyName,  ct.CountyName)   AS CountyName,
     COALESCE(van.PrecinctName, dal.PRECINCT_NAME) AS PrecinctName,
+    dal.CONG_CODE_VALUE                        AS CD,
     COUNT(van.VoterFileVANID) AS TotalMatchedVoters,
 
     SUM(CASE WHEN dal.BALLOT_RECEIPT_DATE IS NOT NULL
@@ -157,7 +165,8 @@ LEFT JOIN Voter.dbo.County_Twist ct
 WHERE dal.rn = 1
 
 GROUP BY COALESCE(van.CountyName, ct.CountyName),
-         COALESCE(van.PrecinctName, dal.PRECINCT_NAME)
+         COALESCE(van.PrecinctName, dal.PRECINCT_NAME),
+         dal.CONG_CODE_VALUE
 ORDER BY COALESCE(van.CountyName, ct.CountyName),
          COALESCE(van.PrecinctName, dal.PRECINCT_NAME);
 """
@@ -301,6 +310,58 @@ def aggregate_counties(df):
         .sort_values("CountyName")
     )
 
+def aggregate_cds(df):
+    """One row per congressional district, with the counties feeding it."""
+    grp_cols = NUM_COLS + ["VotedCount", "OutCount"]
+    cd = (
+        df.groupby("CD")[grp_cols]
+        .sum()
+        .reset_index()
+        .sort_values("CD")
+    )
+    counties = (
+        df[df["VotedCount"] + df["OutCount"] > 0]
+        .groupby("CD")["CountyName"]
+        .nunique()
+        .rename("CountyCount")
+        .reset_index()
+    )
+    cd = cd.merge(counties, on="CD", how="left")
+    cd["CountyCount"] = cd["CountyCount"].fillna(0).astype(int)
+    cd["Target"] = cd["CD"].isin(TARGET_CDS)
+    return cd
+
+
+def aggregate_county_by_cd(df):
+    """County x CD, for drilling into a district.
+
+    The precinct -> CD attribution is exact (precincts do not split CDs), but
+    CONG_CODE_VALUE itself is noisy: a county that is really one or two CDs
+    picks up single stray records in others. Same floor as the cure dashboard
+    - a county keeps its dominant row, other rows need MIN_CD_BALLOTS, and a
+    target-CD row is never dropped however small.
+    """
+    grp_cols = NUM_COLS + ["VotedCount", "OutCount"]
+    out = (
+        df.groupby(["CD", "CountyName"])[grp_cols]
+        .sum()
+        .reset_index()
+    )
+    out["Ballots"] = out["VotedCount"] + out["OutCount"]
+    out = out[out["Ballots"] > 0]
+
+    keep = []
+    for _, grp in out.groupby("CountyName"):
+        grp = grp.sort_values("Ballots", ascending=False)
+        for i, (_, row) in enumerate(grp.iterrows()):
+            if i == 0 or row["Ballots"] >= MIN_CD_BALLOTS or row["CD"] in TARGET_CDS:
+                keep.append(row)
+    if not keep:
+        return out.drop(columns=["Ballots"]).sort_values(["CD", "CountyName"])
+    kept = pd.DataFrame(keep).drop(columns=["Ballots"])
+    return kept.sort_values(["CD", "CountyName"])
+
+
 def aggregate_statewide(df):
     grp_cols = NUM_COLS + ["VotedCount","OutCount"]
     return df[grp_cols].sum().to_dict()
@@ -340,6 +401,15 @@ def main():
 
     write_json(df_to_records(df),                                os.path.join(DATA_DIR, "precincts.json"))
     write_json(df_to_records(aggregate_counties(df)),            os.path.join(DATA_DIR, "counties.json"))
+
+    cd_df = aggregate_cds(df)
+    write_json({
+        "targets":     TARGET_CDS,
+        "districts":   df_to_records(cd_df),
+        "by_county":   df_to_records(aggregate_county_by_cd(df)),
+    },                                                           os.path.join(DATA_DIR, "cds.json"))
+    print(f"  {len(cd_df)} congressional districts "
+          f"({int(cd_df['Target'].sum())} targeted)")
 
     statewide = aggregate_statewide(df)
     statewide["CountyCount"]   = int(df["CountyName"].nunique())

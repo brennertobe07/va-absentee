@@ -8,6 +8,18 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
+  /* By CD tab */
+  .badge-target {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .5px;
+    background: rgba(58,143,212,0.18); color: var(--accent);
+    border: 1px solid rgba(58,143,212,0.45);
+  }
+  tr.target-row td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+  tr.clickable { cursor: pointer; }
+  tr.clickable:hover td { background: var(--surface2); }
+  hr.stat-divider { border: 0; grid-column: 1 / -1; margin: 2px 0; }
+
   :root {
     --dem:      #2166ac;
     --dem-lt:   #74add1;
@@ -755,6 +767,7 @@ UDk/hX7zfCL/AINOPhd4dngm8YePfFPiXy23SW1pDFYwy/8AAhlx+dfcf7MH/BLT4F/sg+VJ4K+H
     <h1><span>2026 November General</span> — Absentee Tracker</h1>
     <div class="top-tabs">
       <button class="top-tab active" data-tab="summary">Summary</button>
+      <button class="top-tab" data-tab="cd">By CD</button>
       <button class="top-tab" data-tab="trends">Daily Trends</button>
       <button class="top-tab" data-tab="comparison">Historical Comparison</button>
     </div>
@@ -790,15 +803,16 @@ let ELECTION_DAY = new Date('2026-11-03');
 // ── BOOT ──────────────────────────────────────────────────────────────────
 async function loadData() {
   try {
-    const [summary, counties, precincts, daily, meta, comparison] = await Promise.all([
+    const [summary, counties, precincts, daily, meta, comparison, cds] = await Promise.all([
       fetch('data/summary.json').then(r => r.json()),
       fetch('data/counties.json').then(r => r.json()),
       fetch('data/precincts.json').then(r => r.json()),
       fetch('data/daily.json').then(r => r.json()),
       fetch('data/metadata.json').then(r => r.json()),
       fetch('data/comparison.json').then(r => r.json()).catch(() => null),
+      fetch('data/cds.json').then(r => r.json()).catch(() => null),
     ]);
-    DATA = { summary, counties, precincts, daily, meta, comparison };
+    DATA = { summary, counties, precincts, daily, meta, comparison, cds };
 
     document.getElementById('last-updated').textContent = `Updated: ${meta.last_updated}`;
 
@@ -838,7 +852,8 @@ document.querySelectorAll('.top-tab').forEach(btn => {
     document.querySelectorAll('.top-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const layout = document.getElementById('layout');
-    layout.classList.toggle('no-sidebar', currentTab === 'trends' || currentTab === 'comparison');
+    layout.classList.toggle('no-sidebar',
+      currentTab === 'trends' || currentTab === 'comparison' || currentTab === 'cd');
     renderView();
   });
 });
@@ -886,6 +901,8 @@ function renderView() {
   const main = document.getElementById('main-content');
   if (currentTab === 'trends') {
     renderTrends(main);
+  } else if (currentTab === 'cd') {
+    renderCDs(main);
   } else if (currentTab === 'comparison') {
     renderPartyPace(main);
   } else if (currentCounty === null) {
@@ -893,6 +910,129 @@ function renderView() {
   } else {
     renderCounty(main, currentCounty);
   }
+}
+
+
+// ── BY CD ─────────────────────────────────────────────────────────────────
+// Congressional districts. Precincts do not split CDs, so the county rollup
+// underneath is exact. Watched through the 45 days before the election.
+let cdSelected = null;
+
+function renderCDs(main) {
+  const data = DATA.cds;
+  if (!data || !data.districts || !data.districts.length) {
+    main.innerHTML = `<div class="loading">No CD data. Re-run build_absentee_json.py.</div>`;
+    return;
+  }
+  const targets = data.targets || [];
+  const rows    = data.districts.slice().sort((a, b) => a.CD.localeCompare(b.CD));
+  const tgtRows = rows.filter(r => r.Target);
+
+  if (cdSelected === null) cdSelected = (tgtRows[0] || rows[0]).CD;
+
+  main.innerHTML = `
+    <div>
+      <div class="section-banner">🎯 Congressional Districts — targets ${targets.join(', ')}</div>
+      <div class="stat-grid" id="cd-stat-grid"></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header"><h3>All Districts</h3></div>
+      <div class="table-scroll"><table id="cd-table"></table></div>
+      <div class="table-footer" id="cd-footer"></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header"><h3 id="cd-county-title"></h3></div>
+      <div class="table-scroll"><table id="cd-county-table"></table></div>
+      <div class="table-footer" id="cd-county-footer"></div>
+    </div>`;
+
+  // Stat cards: one pair per target district
+  const cards = [];
+  tgtRows.forEach((r, i) => {
+    const tot = (r.VotedCount || 0) + (r.OutCount || 0);
+    if (i > 0) cards.push({ divider: true });
+    cards.push({ cls:'total', label:`CD ${r.CD} — Universe`, val: tot,
+                 sub: `${fmt(r.CountyCount)} localities` });
+    cards.push({ cls:'ip',    label:`CD ${r.CD} — Voted`,    val: r.VotedCount,
+                 sub: pct(r.VotedCount, tot) + ' return rate' });
+    cards.push({ cls:'dem',   label:`CD ${r.CD} — Dem Out`,  val: r.DemOutCount,
+                 sub: pct(r.DemOutCount, r.OutCount) + ' of still out' });
+    cards.push({ cls:'rep',   label:`CD ${r.CD} — Rep Out`,  val: r.RepOutCount,
+                 sub: pct(r.RepOutCount, r.OutCount) + ' of still out' });
+  });
+  document.getElementById('cd-stat-grid').innerHTML = statCards(cards);
+
+  buildCDTable(rows);
+  buildCDCountyTable();
+}
+
+function buildCDTable(rows) {
+  const head = ['CD','','Localities','D RET','R RET','TOTAL RET','D OUT','R OUT','TOTAL OUT','RET%'];
+  let html = '<thead><tr>' + head.map((h, i) =>
+    `<th${i === 0 ? ' style="text-align:left"' : ''}>${h}</th>`).join('') + '</tr></thead><tbody>';
+
+  rows.forEach(r => {
+    const tot = (r.VotedCount || 0) + (r.OutCount || 0);
+    const sel = r.CD === cdSelected ? ' style="background:rgba(59,130,246,0.10)"' : '';
+    html += `<tr class="clickable${r.Target ? ' target-row' : ''}" data-cd="${r.CD}"${sel}>
+      <td><strong>${r.CD}</strong></td>
+      <td>${r.Target ? '<span class="badge badge-target">TARGET</span>' : ''}</td>
+      <td>${fmt(r.CountyCount)}</td>
+      <td class="dem-col">${fmt(r.DemVotedCount)}</td>
+      <td class="rep-col">${fmt(r.RepVotedCount)}</td>
+      <td><strong>${fmt(r.VotedCount)}</strong></td>
+      <td class="dem-col">${fmt(r.DemOutCount)}</td>
+      <td class="rep-col">${fmt(r.RepOutCount)}</td>
+      <td class="out-col">${fmt(r.OutCount)}</td>
+      <td>${pct(r.VotedCount, tot)}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  const tbl = document.getElementById('cd-table');
+  tbl.innerHTML = html;
+  tbl.querySelectorAll('tr[data-cd]').forEach(tr => {
+    tr.addEventListener('click', () => {
+      cdSelected = tr.dataset.cd;
+      renderCDs(document.getElementById('main-content'));
+    });
+  });
+  document.getElementById('cd-footer').textContent =
+    `${rows.length} districts with ballots issued — click one for its localities`;
+}
+
+function buildCDCountyTable() {
+  const all  = (DATA.cds && DATA.cds.by_county) || [];
+  const rows = all.filter(r => r.CD === cdSelected)
+                  .sort((a, b) => (b.VotedCount + b.OutCount) - (a.VotedCount + a.OutCount));
+  document.getElementById('cd-county-title').textContent = `Localities in CD ${cdSelected}`;
+
+  if (!rows.length) {
+    document.getElementById('cd-county-table').innerHTML =
+      '<tbody><tr><td class="dim">No localities with ballots issued yet.</td></tr></tbody>';
+    document.getElementById('cd-county-footer').textContent = '';
+    return;
+  }
+
+  const head = ['LOCALITY','D RET','R RET','TOTAL RET','D OUT','R OUT','TOTAL OUT','RET%'];
+  let html = '<thead><tr>' + head.map((h, i) =>
+    `<th${i === 0 ? ' style="text-align:left"' : ''}>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => {
+    const tot = (r.VotedCount || 0) + (r.OutCount || 0);
+    html += `<tr>
+      <td>${r.CountyName}</td>
+      <td class="dem-col">${fmt(r.DemVotedCount)}</td>
+      <td class="rep-col">${fmt(r.RepVotedCount)}</td>
+      <td><strong>${fmt(r.VotedCount)}</strong></td>
+      <td class="dem-col">${fmt(r.DemOutCount)}</td>
+      <td class="rep-col">${fmt(r.RepOutCount)}</td>
+      <td class="out-col">${fmt(r.OutCount)}</td>
+      <td>${pct(r.VotedCount, tot)}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  document.getElementById('cd-county-table').innerHTML = html;
+  document.getElementById('cd-county-footer').textContent =
+    `${rows.length} localities — small non-target slivers suppressed`;
 }
 
 // ── SUMMARY — STATEWIDE ───────────────────────────────────────────────────
