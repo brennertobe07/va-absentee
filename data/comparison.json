@@ -674,6 +674,19 @@
           "in_person_rep": 4,
           "mail_dem": 8,
           "mail_rep": 6
+        },
+        {
+          "days_before": 50,
+          "total_voted": 20,
+          "in_person": 7,
+          "mail": 13,
+          "dem_voted": 12,
+          "rep_voted": 7,
+          "unknown_voted": 1,
+          "in_person_dem": 4,
+          "in_person_rep": 3,
+          "mail_dem": 8,
+          "mail_rep": 4
         }
       ]
     },
@@ -1494,11 +1507,11 @@
       {
         "election": "26Gen",
         "label": "26Gen",
-        "days_before": 56,
-        "prior_voted": 23,
-        "difference": 1394722
+        "days_before": 50,
+        "prior_voted": 20,
+        "difference": 1394725
       }
     ]
   },
-  "generated_at": "2026-09-08 12:11"
+  "generated_at": "2026-09-14 10:12"
 }
