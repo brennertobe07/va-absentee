@@ -29,11 +29,11 @@
     "InPersonRep": 75,
     "MailDem": 0,
     "MailRep": 1,
-    "DemOutCount": 5739,
+    "DemOutCount": 5738,
     "RepOutCount": 1087,
     "UnknownOutCount": 29,
     "VotedCount": 653,
-    "OutCount": 6855
+    "OutCount": 6854
   },
   {
     "CountyName": "Alexandria (City)",
@@ -451,7 +451,7 @@
   },
   {
     "CountyName": "Chesterfield",
-    "TotalMatchedVoters": 21379,
+    "TotalMatchedVoters": 21396,
     "DemVotedCount": 664,
     "RepVotedCount": 263,
     "UnknownVotedCount": 4,
@@ -461,11 +461,11 @@
     "InPersonRep": 262,
     "MailDem": 8,
     "MailRep": 1,
-    "DemOutCount": 13789,
-    "RepOutCount": 6167,
+    "DemOutCount": 13802,
+    "RepOutCount": 6171,
     "UnknownOutCount": 43,
     "VotedCount": 931,
-    "OutCount": 19999
+    "OutCount": 20016
   },
   {
     "CountyName": "Clarke",
@@ -667,20 +667,20 @@
   },
   {
     "CountyName": "Fairfax",
-    "TotalMatchedVoters": 79543,
-    "DemVotedCount": 5808,
+    "TotalMatchedVoters": 79544,
+    "DemVotedCount": 5810,
     "RepVotedCount": 1247,
     "UnknownVotedCount": 20,
-    "InPersonCount": 4531,
+    "InPersonCount": 4533,
     "MailCount": 2544,
-    "InPersonDem": 3737,
+    "InPersonDem": 3739,
     "InPersonRep": 777,
     "MailDem": 2071,
     "MailRep": 470,
     "DemOutCount": 59425,
     "RepOutCount": 10306,
     "UnknownOutCount": 300,
-    "VotedCount": 7075,
+    "VotedCount": 7077,
     "OutCount": 70031
   },
   {
@@ -991,7 +991,7 @@
   },
   {
     "CountyName": "Hampton (City)",
-    "TotalMatchedVoters": 6333,
+    "TotalMatchedVoters": 6334,
     "DemVotedCount": 406,
     "RepVotedCount": 65,
     "UnknownVotedCount": 1,
@@ -1001,11 +1001,11 @@
     "InPersonRep": 65,
     "MailDem": 0,
     "MailRep": 0,
-    "DemOutCount": 4968,
+    "DemOutCount": 4969,
     "RepOutCount": 827,
     "UnknownOutCount": 6,
     "VotedCount": 472,
-    "OutCount": 5801
+    "OutCount": 5802
   },
   {
     "CountyName": "Hanover",
@@ -1027,20 +1027,20 @@
   },
   {
     "CountyName": "Harrisonburg (City)",
-    "TotalMatchedVoters": 1044,
-    "DemVotedCount": 138,
+    "TotalMatchedVoters": 1045,
+    "DemVotedCount": 139,
     "RepVotedCount": 21,
     "UnknownVotedCount": 0,
-    "InPersonCount": 159,
+    "InPersonCount": 160,
     "MailCount": 0,
-    "InPersonDem": 138,
+    "InPersonDem": 139,
     "InPersonRep": 21,
     "MailDem": 0,
     "MailRep": 0,
     "DemOutCount": 668,
     "RepOutCount": 165,
     "UnknownOutCount": 2,
-    "VotedCount": 159,
+    "VotedCount": 160,
     "OutCount": 835
   },
   {
@@ -1477,20 +1477,20 @@
   },
   {
     "CountyName": "Nelson",
-    "TotalMatchedVoters": 607,
-    "DemVotedCount": 4,
-    "RepVotedCount": 0,
+    "TotalMatchedVoters": 750,
+    "DemVotedCount": 128,
+    "RepVotedCount": 23,
     "UnknownVotedCount": 0,
-    "InPersonCount": 0,
+    "InPersonCount": 147,
     "MailCount": 4,
-    "InPersonDem": 0,
-    "InPersonRep": 0,
+    "InPersonDem": 124,
+    "InPersonRep": 23,
     "MailDem": 4,
     "MailRep": 0,
     "DemOutCount": 371,
     "RepOutCount": 201,
     "UnknownOutCount": 1,
-    "VotedCount": 4,
+    "VotedCount": 151,
     "OutCount": 573
   },
   {
@@ -1531,7 +1531,7 @@
   },
   {
     "CountyName": "Norfolk (City)",
-    "TotalMatchedVoters": 10617,
+    "TotalMatchedVoters": 10641,
     "DemVotedCount": 707,
     "RepVotedCount": 100,
     "UnknownVotedCount": 5,
@@ -1541,11 +1541,11 @@
     "InPersonRep": 33,
     "MailDem": 386,
     "MailRep": 67,
-    "DemOutCount": 8194,
+    "DemOutCount": 8202,
     "RepOutCount": 1397,
-    "UnknownOutCount": 24,
+    "UnknownOutCount": 26,
     "VotedCount": 812,
-    "OutCount": 9615
+    "OutCount": 9625
   },
   {
     "CountyName": "Northampton",
@@ -1963,7 +1963,7 @@
   },
   {
     "CountyName": "Rockingham",
-    "TotalMatchedVoters": 2556,
+    "TotalMatchedVoters": 2559,
     "DemVotedCount": 144,
     "RepVotedCount": 109,
     "UnknownVotedCount": 0,
@@ -1973,11 +1973,11 @@
     "InPersonRep": 109,
     "MailDem": 0,
     "MailRep": 0,
-    "DemOutCount": 1050,
+    "DemOutCount": 1053,
     "RepOutCount": 1176,
     "UnknownOutCount": 6,
     "VotedCount": 253,
-    "OutCount": 2232
+    "OutCount": 2235
   },
   {
     "CountyName": "Russell",
