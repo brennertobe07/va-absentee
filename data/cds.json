@@ -218,11 +218,11 @@
       "InPersonRep": 882,
       "MailDem": 3397,
       "MailRep": 727,
-      "DemOutCount": 40363,
+      "DemOutCount": 40364,
       "RepOutCount": 6969,
       "UnknownOutCount": 197,
       "VotedCount": 8930,
-      "OutCount": 47529,
+      "OutCount": 47530,
       "CountyCount": 12,
       "Target": false
     }
@@ -2920,11 +2920,11 @@
       "InPersonRep": 838,
       "MailDem": 3391,
       "MailRep": 725,
-      "DemOutCount": 39039,
+      "DemOutCount": 39040,
       "RepOutCount": 6780,
       "UnknownOutCount": 189,
       "VotedCount": 8688,
-      "OutCount": 46008
+      "OutCount": 46009
     },
     {
       "CD": "11",
