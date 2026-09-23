@@ -38,6 +38,8 @@
     --text:     #e8eaf0;
     --muted:    #8890a8;
     --accent:   #3a8fd4;
+    --ok:       #55c97a;
+    --fail:     #e57368;
     --radius:   8px;
     --mono:     'DM Mono', monospace;
     --sans:     'DM Sans', sans-serif;
@@ -119,6 +121,22 @@
     color: var(--muted);
     white-space: nowrap;
   }
+
+  /* ── MORNING REPORT (data/pipeline_status.json) ── */
+  #status-mark { color: var(--ok); margin-left: 6px; cursor: help; }
+  #pipeline-banner {
+    background: rgba(192,57,43,.18);
+    border-bottom: 2px solid var(--fail);
+    color: var(--text);
+    font-size: .85rem;
+    padding: 8px 24px;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px;
+  }
+  #pipeline-banner[hidden] { display: none; }
+  #pipeline-banner strong { color: var(--fail); }
+  #pipeline-banner .steps { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+  #pipeline-banner .steps .bad { color: var(--fail); }
+  @media (max-width: 600px) { #pipeline-banner { padding: 8px 16px; } }
 
   /* ── LAYOUT ── */
   .layout {
@@ -778,6 +796,8 @@ UDk/hX7zfCL/AINOPhd4dngm8YePfFPiXy23SW1pDFYwy/8AAhlx+dfcf7MH/BLT4F/sg+VJ4K+H
   </div>
 </header>
 
+<div id="pipeline-banner" role="alert" hidden></div>
+
 <div class="layout" id="layout">
   <aside id="sidebar">
     <button class="statewide-btn active" id="btn-statewide">🗺 Statewide</button>
@@ -799,6 +819,53 @@ let charts = {};
 
 // Fallback only - the real value comes from data/metadata.json at load time.
 let ELECTION_DAY = new Date('2026-11-03');
+
+// ── MORNING REPORT ────────────────────────────────────────────────────────
+// Written by export_dashboards.py at 07:00. Quiet check mark when every step
+// ran today; red banner when one failed or the status itself is stale.
+const STALE_AFTER_HOUR = 8;   // before this, yesterday's status is expected
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function loadPipelineStatus() {
+  let st;
+  try {
+    st = await fetch('data/pipeline_status.json', { cache: 'no-store' }).then(r => r.json());
+  } catch (e) {
+    return;   // no report yet - leave the header as is
+  }
+
+  const now      = new Date();
+  const pad      = n => String(n).padStart(2, '0');
+  const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const stale    = !st.checked_at.startsWith(todayStr) && now.getHours() >= STALE_AFTER_HOUR;
+  const flag     = ok => ok === true ? '✓' : ok === false ? '✗' : '?';
+  const lines    = st.steps.map(s => `${flag(s.ok)} ${s.name} ${s.time || '--:--'}  ${s.detail}`);
+
+  if (st.ok && !stale) {
+    const mark = document.createElement('span');
+    mark.id = 'status-mark';
+    mark.textContent = '✓';
+    mark.title = [`All processes ran — checked ${st.checked_at}`, ...lines].join('\n');
+    document.getElementById('last-updated').appendChild(mark);
+    return;
+  }
+
+  const failed = st.steps.find(s => s.ok === false);
+  const headline = stale
+    ? `Dashboards have not updated today — showing data from ${esc(st.checked_at)}.`
+    : `${esc(failed.name)} FAILED ${esc(failed.time || '')} — ${esc(failed.detail)}`;
+  const steps = st.steps.map(s =>
+    `<span class="${s.ok === false ? 'bad' : ''}">${flag(s.ok)} ${esc(s.name)}</span>`).join(' · ');
+
+  const banner = document.getElementById('pipeline-banner');
+  banner.innerHTML = `<span>⚠ <strong>${headline}</strong></span><span class="steps">${steps}</span>`;
+  banner.title = lines.join('\n');
+  banner.hidden = false;
+}
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 async function loadData() {
@@ -833,6 +900,7 @@ async function loadData() {
 
     buildSidebar();
     renderView();
+    loadPipelineStatus();
   } catch(err) {
     document.getElementById('main-content').innerHTML =
       `<div class="error-box">Failed to load data files.<br>${err}</div>`;
