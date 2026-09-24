@@ -1031,6 +1031,7 @@ function renderKey(main) {
     ${section('Historical Comparison', [
       ['Alignment', 'Elections are lined up by days before Election Day, not by calendar date.'],
       ['Past party splits', 'Dem / Rep for past elections use today\'s VAN party IDs and scores, so they are approximate — voters\' current scores, not their scores at the time.'],
+      ['2022 General', 'Built from DNC Phoenix daily files. About 8% of 2022 voters are no longer on the voter file, so their party is estimated from how the known voters in their precinct split.'],
     ])}`;
 }
 
@@ -1606,17 +1607,10 @@ function renderComparison(main) {
   const summary   = cmp.summary || {};
   const curName   = cmp.current_election;
   const curElec   = cmp.elections.find(e => e.name === curName);
-  const priorElec = cmp.elections.find(e => e.name !== curName);
+  const priors    = priorElections(cmp);
 
   const curVoted   = summary.current_voted || 0;
-  const priorMatch = summary.prior_comparisons && summary.prior_comparisons[0];
-  const priorVoted = priorMatch ? priorMatch.prior_voted : 0;
-  const diff       = curVoted - priorVoted;
-  const diffSign   = diff >= 0 ? '+' : '';
-  const diffColor  = diff >= 0 ? 'var(--mail)' : 'var(--rep)';
-  const diffLabel  = diff >= 0 ? 'ahead of prior pace' : 'behind prior pace';
   const curLabel   = curElec  ? curElec.label  : curName;
-  const priorLabel = priorElec ? priorElec.label : (priorMatch ? priorMatch.label : '');
 
   main.innerHTML = `
     <div>
@@ -1628,7 +1622,7 @@ function renderComparison(main) {
       <div class="toggle-row">
         <h3>Cumulative Voted — Days Before Election</h3>
         <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">
-          Solid = ${curLabel} &nbsp;|&nbsp; Dashed = ${priorLabel} &nbsp;|&nbsp; ↓ Click to show / hide
+          ${lineStyleCaption(curLabel, priors)} &nbsp;|&nbsp; ↓ Click to show / hide
         </div>
         <div class="toggle-btns">
           <button class="toggle-btn active" data-cmp="total">
@@ -1649,17 +1643,22 @@ function renderComparison(main) {
         </div>
       </div>
       <canvas id="chart-comparison"></canvas>
+      ${priorNotes(priors)}
     </div>`;
 
+  // One card for the current election, then one per prior election with the
+  // gap to it in the sub line
+  const matches = summary.prior_comparisons || [];
   document.getElementById('cmp-stat-grid').innerHTML = statCards([
     { cls:'total', label: curLabel + ' — Day ' + (summary.current_day || '—'),
       val: curVoted, sub: 'voted as of today' },
-    { cls:'total', label: priorLabel + ' — Same Point',
-      val: priorVoted, sub: priorMatch ? 'day ' + priorMatch.days_before + ' before election' : '—' },
-    { cls: diff >= 0 ? 'out' : 'rep',
-      label: 'Difference',
-      val: Math.abs(diff),
-      sub: diffSign + fmt(diff) + ' — ' + diffLabel },
+    ...priors.map(p => {
+      const m = matches.find(x => x.election === p.name);
+      if (!m) return { cls:'total', label: p.label + ' — Same Point', val: 0, sub: 'no data for this day' };
+      const diff = curVoted - m.prior_voted;
+      return { cls: diff >= 0 ? 'out' : 'rep', label: p.label + ' — Same Point',
+               val: m.prior_voted, sub: aheadBehind(curLabel, diff) };
+    }),
   ]);
 
   // Initial toggle state — only total on
@@ -1680,18 +1679,19 @@ function renderComparison(main) {
 function buildComparisonChart(cmp, state) {
   const curName  = cmp.current_election;
   const curElec  = cmp.elections.find(e => e.name === curName);
-  const priors   = cmp.elections.filter(e => e.name !== curName);
+  const priors   = priorElections(cmp);
 
   // Build a unified sorted set of days_before values across all elections
   const allDays = [...new Set(
     cmp.elections.flatMap(e => e.days.map(d => d.days_before))
   )].sort((a, b) => b - a);  // descending: 50 → 0
 
-  const labels = allDays.map(d => `D-${d}`);
+  const labels = allDays.map(dayLabel);
 
-  function makeDataset(elec, field, color, dashed, labelSuffix) {
+  function makeDataset(elec, field, color, dash, labelSuffix) {
     const lookup = {};
     elec.days.forEach(d => { lookup[d.days_before] = d[field]; });
+    const prior = dash.length > 0;
     return {
       label: elec.label + labelSuffix,
       data:  allDays.map(d => lookup[d] != null ? lookup[d] : null),
@@ -1699,9 +1699,9 @@ function buildComparisonChart(cmp, state) {
       backgroundColor: 'transparent',
       fill: false,
       tension: .35,
-      borderWidth: dashed ? 2 : 2.5,
-      borderDash: dashed ? [6, 4] : [],
-      pointRadius: dashed ? 2 : 3,
+      borderWidth: prior ? 2 : 2.5,
+      borderDash: dash,
+      pointRadius: prior ? 2 : 3,
       pointHoverRadius: 5,
       spanGaps: false,
     };
@@ -1715,7 +1715,7 @@ function buildComparisonChart(cmp, state) {
 
   const datasets = [];
 
-  // For each series, add current (solid) then each prior (dashed)
+  // For each series, add current (solid) then each prior (dashed, dotted...)
   const series = [
     { key: 'total', field: 'total_voted',  color: accentColor, label: ' — Total' },
     { key: 'ip',    field: 'in_person',    color: ipColor,     label: ' — In-Person' },
@@ -1726,10 +1726,10 @@ function buildComparisonChart(cmp, state) {
 
   series.forEach(s => {
     if (curElec) {
-      datasets.push({ ...makeDataset(curElec, s.field, s.color, false, s.label), cmpKey: s.key, hidden: !state[s.key] });
+      datasets.push({ ...makeDataset(curElec, s.field, s.color, [], s.label), cmpKey: s.key, hidden: !state[s.key] });
     }
-    priors.forEach(p => {
-      datasets.push({ ...makeDataset(p, s.field, s.color, true, s.label + ' (prior)'), cmpKey: s.key, hidden: !state[s.key] });
+    priors.forEach((p, i) => {
+      datasets.push({ ...makeDataset(p, s.field, s.color, priorDash(i), s.label), cmpKey: s.key, hidden: !state[s.key] });
     });
   });
 
@@ -1795,116 +1795,88 @@ function renderPartyPace(main) {
 
   const curName   = cmp.current_election;
   const curElec   = cmp.elections.find(e => e.name === curName);
-  const priorElec = cmp.elections.find(e => e.name !== curName);
+  const priors    = priorElections(cmp);
   const summary   = cmp.summary || {};
-  const priorMatch = summary.prior_comparisons && summary.prior_comparisons[0];
-
-  const curLabel   = curElec   ? curElec.label   : curName;
-  const priorLabel = priorElec ? priorElec.label : '';
+  const curLabel  = curElec ? curElec.label : curName;
 
   // Lookup maps keyed by days_before
-  const curLookup   = {};
-  const priorLookup = {};
-  if (curElec)   curElec.days.forEach(d   => { curLookup[d.days_before]   = d; });
-  if (priorElec) priorElec.days.forEach(d => { priorLookup[d.days_before] = d; });
+  const byDay = elec => {
+    const lookup = {};
+    if (elec) elec.days.forEach(d => { lookup[d.days_before] = d; });
+    return lookup;
+  };
+  const curLookup = byDay(curElec);
 
   // Summary card values at current day
-  const curDay      = summary.current_day || 0;
-  const curDem      = curLookup[curDay]   ? curLookup[curDay].dem_voted   : 0;
-  const curRep      = curLookup[curDay]   ? curLookup[curDay].rep_voted   : 0;
-  const priorDem    = priorLookup[curDay] ? priorLookup[curDay].dem_voted : 0;
-  const priorRep    = priorLookup[curDay] ? priorLookup[curDay].rep_voted : 0;
-  const demDiff     = curDem - priorDem;
-  const repDiff     = curRep - priorRep;
-  const demSign     = demDiff >= 0 ? '+' : '';
-  const repSign     = repDiff >= 0 ? '+' : '';
+  const curDay = summary.current_day || 0;
+  const curDem = curLookup[curDay] ? curLookup[curDay].dem_voted : 0;
+  const curRep = curLookup[curDay] ? curLookup[curDay].rep_voted : 0;
+
+  // One row per party: current election, then each prior with the gap in the sub line
+  const partyCards = (cls, party, field, curVal) => [
+    { cls, label: party + ' — ' + curLabel, val: curVal, sub: 'day ' + curDay + ' before election' },
+    ...priors.map(p => {
+      const d = byDay(p)[curDay];
+      if (!d) return { cls, label: party + ' — ' + p.label, val: 0, sub: 'no data for this day' };
+      return { cls, label: party + ' — ' + p.label, val: d[field], sub: aheadBehind(curLabel, curVal - d[field]) };
+    }),
+  ];
 
   main.innerHTML = `
     <div>
-      <div class="section-title">Party Pace — ${curLabel} vs ${priorLabel}</div>
+      <div class="section-title">Party Pace — ${curLabel} vs ${priors.map(p => p.label).join(' and ')}</div>
       <div class="stat-grid" id="pp-stat-grid"></div>
     </div>
     <div class="chart-card tall wide">
       <div class="toggle-row">
         <h3>Cumulative Dem &amp; Rep Voted — Days Before Election</h3>
         <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.10em;text-transform:uppercase;color:var(--muted)">
-          Solid = ${curLabel} &nbsp;|&nbsp; Dashed = ${priorLabel}
+          ${lineStyleCaption(curLabel, priors)}
         </div>
       </div>
       <canvas id="chart-partypace"></canvas>
+      ${priorNotes(priors)}
     </div>`;
 
   document.getElementById('pp-stat-grid').innerHTML = statCards([
-    { cls:'dem', label:'Dem — ' + curLabel,     val: curDem,   sub: 'day ' + curDay + ' before election' },
-    { cls:'dem', label:'Dem — ' + priorLabel,   val: priorDem, sub: 'same point' },
-    { cls: demDiff >= 0 ? 'dem' : 'rep',
-      label: 'Dem Difference',
-      val: Math.abs(demDiff),
-      sub: demSign + fmt(demDiff) + (demDiff >= 0 ? ' — ahead' : ' — behind') },
-    { cls:'rep', label:'Rep — ' + curLabel,     val: curRep,   sub: 'day ' + curDay + ' before election' },
-    { cls:'rep', label:'Rep — ' + priorLabel,   val: priorRep, sub: 'same point' },
-    { cls: repDiff <= 0 ? 'dem' : 'rep',
-      label: 'Rep Difference',
-      val: Math.abs(repDiff),
-      sub: repSign + fmt(repDiff) + (repDiff >= 0 ? ' — ahead' : ' — behind') },
+    ...partyCards('dem', 'Dem', 'dem_voted', curDem),
+    ...partyCards('rep', 'Rep', 'rep_voted', curRep),
   ]);
 
-  buildPartyPaceChart(curElec, priorElec, curLabel, priorLabel);
+  buildPartyPaceChart(curElec, priors, curLabel);
 }
 
-function buildPartyPaceChart(curElec, priorElec, curLabel, priorLabel) {
-  const curLookup   = {};
-  const priorLookup = {};
-  if (curElec)   curElec.days.forEach(d   => { curLookup[d.days_before]   = d; });
-  if (priorElec) priorElec.days.forEach(d => { priorLookup[d.days_before] = d; });
+function buildPartyPaceChart(curElec, priors, curLabel) {
+  const elecs = [curElec, ...priors].filter(Boolean);
+  const allDays = [...new Set(
+    elecs.flatMap(e => e.days.map(d => d.days_before))
+  )].sort((a, b) => b - a);
 
-  const allDays = [...new Set([
-    ...Object.keys(curLookup).map(Number),
-    ...Object.keys(priorLookup).map(Number),
-  ])].sort((a, b) => b - a);
-
-  const labels   = allDays.map(d => `D-${d}`);
+  const labels   = allDays.map(dayLabel);
   const demColor = cssVar('--dem');
   const repColor = cssVar('--rep');
 
-  const datasets = [
-    {
-      label:       curLabel + ' — Dem',
-      data:        allDays.map(d => curLookup[d]   ? curLookup[d].dem_voted   : null),
-      borderColor: demColor,
-      borderWidth: 2.5,
-      borderDash:  [],
-      pointRadius: 3,
+  function line(elec, field, color, dash, party) {
+    const lookup = {};
+    elec.days.forEach(d => { lookup[d.days_before] = d[field]; });
+    const prior = dash.length > 0;
+    return {
+      label:       elec.label + ' — ' + party,
+      data:        allDays.map(d => lookup[d] != null ? lookup[d] : null),
+      borderColor: color,
+      borderWidth: prior ? 2 : 2.5,
+      borderDash:  dash,
+      pointRadius: prior ? 2 : 3,
       fill: false, tension: .35, backgroundColor: 'transparent', spanGaps: true,
-    },
-    {
-      label:       priorLabel + ' — Dem',
-      data:        allDays.map(d => priorLookup[d] ? priorLookup[d].dem_voted : null),
-      borderColor: demColor,
-      borderWidth: 2,
-      borderDash:  [6, 4],
-      pointRadius: 2,
-      fill: false, tension: .35, backgroundColor: 'transparent', spanGaps: true,
-    },
-    {
-      label:       curLabel + ' — Rep',
-      data:        allDays.map(d => curLookup[d]   ? curLookup[d].rep_voted   : null),
-      borderColor: repColor,
-      borderWidth: 2.5,
-      borderDash:  [],
-      pointRadius: 3,
-      fill: false, tension: .35, backgroundColor: 'transparent', spanGaps: true,
-    },
-    {
-      label:       priorLabel + ' — Rep',
-      data:        allDays.map(d => priorLookup[d] ? priorLookup[d].rep_voted : null),
-      borderColor: repColor,
-      borderWidth: 2,
-      borderDash:  [6, 4],
-      pointRadius: 2,
-      fill: false, tension: .35, backgroundColor: 'transparent', spanGaps: true,
-    },
-  ];
+    };
+  }
+
+  // Current election first (solid, with end labels), then each prior
+  const datasets = [];
+  [['dem_voted', demColor, 'Dem'], ['rep_voted', repColor, 'Rep']].forEach(([field, color, party]) => {
+    if (curElec) datasets.push({ ...line(curElec, field, color, [], party), endLabel: party });
+    priors.forEach((p, i) => datasets.push(line(p, field, color, priorDash(i), party)));
+  });
 
   const endLabelPlugin = {
     id: 'endLabelPP',
@@ -1913,9 +1885,10 @@ function buildPartyPaceChart(curElec, priorElec, curLabel, priorLabel) {
       chart.data.datasets.forEach((ds, i) => {
         if (ds.hidden || !ds.endLabel) return;
         const meta = chart.getDatasetMeta(i);
-        const pts  = meta.data.filter(p => p && !isNaN(p.x));
-        if (!pts.length) return;
-        const last = pts[pts.length - 1];
+        // Last day that has data - later days are null and have no position
+        const idx  = ds.data.reduce((acc, v, k) => v != null ? k : acc, -1);
+        if (idx < 0) return;
+        const last = meta.data[idx];
         ctx.save();
         ctx.font = "bold 10px 'DM Sans', sans-serif";
         ctx.fillStyle = ds.borderColor;
@@ -1925,10 +1898,6 @@ function buildPartyPaceChart(curElec, priorElec, curLabel, priorLabel) {
       });
     }
   };
-
-  // Add end labels to current-election lines only
-  datasets[0].endLabel = 'Dem';
-  datasets[2].endLabel = 'Rep';
 
   const c = new Chart(document.getElementById('chart-partypace'), {
     type: 'line',
@@ -2143,6 +2112,35 @@ function sumRows(rows) {
   keys.forEach(k => { out[k] = rows.reduce((s, r) => s + (r[k] || 0), 0); });
   return out;
 }
+// ── HISTORICAL COMPARISON HELPERS ────────────────────────────────────────
+// Prior elections, most recent first. The first is dashed, the next dotted.
+function priorElections(cmp) {
+  return cmp.elections
+    .filter(e => e.name !== cmp.current_election)
+    .sort((a, b) => b.election_date.localeCompare(a.election_date));
+}
+// D-40 before Election Day, D+3 after
+function dayLabel(d) {
+  return d >= 0 ? `D-${d}` : `D+${-d}`;
+}
+function priorDash(i) {
+  return [[6, 4], [2, 3], [10, 3, 2, 3]][i] || [6, 4];
+}
+function lineStyleCaption(curLabel, priors) {
+  const styles = ['Dashed', 'Dotted', 'Dash-dot'];
+  return ['Solid = ' + curLabel,
+          ...priors.map((p, i) => (styles[i] || 'Dashed') + ' = ' + p.label + (p.note ? '*' : ''))]
+    .join(' &nbsp;|&nbsp; ');
+}
+function priorNotes(priors) {
+  const notes = priors.filter(p => p.note).map(p => '* ' + p.label + ': ' + p.note);
+  if (!notes.length) return '';
+  return `<div style="font-size:.72rem;color:var(--muted);margin-top:8px">${notes.join('<br>')}</div>`;
+}
+function aheadBehind(curLabel, diff) {
+  return curLabel + ' ' + (diff >= 0 ? '+' : '−') + fmt(Math.abs(diff)) + (diff >= 0 ? ' ahead' : ' behind');
+}
+
 function statCards(items) {
   return items.map(i => {
     if (i.divider) return `<hr class="stat-divider">`;
