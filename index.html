@@ -121,7 +121,9 @@
   @media (max-width: 700px) {
     header { padding: 10px 16px; }
     header h1 { white-space: normal; }
-    .header-right { flex-direction: row; align-items: center; gap: 12px; }
+    /* Badge and updated stamp side by side, wrapping when the phone is too narrow */
+    .header-right { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+    #last-updated { white-space: normal; }
   }
   #last-updated {
     font-family: var(--mono);
@@ -156,6 +158,12 @@
   /* sidebar hidden on trends tab */
   .layout.no-sidebar { grid-template-columns: 1fr; }
   .layout.no-sidebar aside { display: none; }
+
+  /* Phones: county list stacks above the content as a short scrolling panel */
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { border-right: 0; border-bottom: 1px solid var(--border); max-height: 240px; }
+  }
 
   /* ── SIDEBAR ── */
   aside {
@@ -220,7 +228,8 @@
   .statewide-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   /* ── MAIN ── */
-  main { padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+  main { padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  @media (max-width: 700px) { main { padding: 16px; } }
 
   .section-title {
     font-size: .62rem; font-weight: 600; letter-spacing: .12em;
@@ -256,6 +265,7 @@
   /* ── CHART GRID ── */
   .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { .chart-grid, .chart-grid-3 { grid-template-columns: 1fr; } }
   .chart-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 16px;
@@ -1817,9 +1827,10 @@ function renderPartyPace(main) {
   const partyCards = (cls, party, field, curVal) => [
     { cls, label: party + ' — ' + curLabel, val: curVal, sub: 'day ' + curDay + ' before election' },
     ...priors.map(p => {
-      const d = byDay(p)[curDay];
-      if (!d) return { cls, label: party + ' — ' + p.label, val: 0, sub: 'no data for this day' };
-      return { cls, label: party + ' — ' + p.label, val: d[field], sub: aheadBehind(curLabel, curVal - d[field]) };
+      const d = samePoint(p, curDay);
+      if (!d) return { cls, label: party + ' — ' + p.label, val: 0, sub: 'no data yet at this point' };
+      const dayNote = d.days_before !== curDay ? ' (day ' + d.days_before + ' file)' : '';
+      return { cls, label: party + ' — ' + p.label, val: d[field], sub: aheadBehind(curLabel, curVal - d[field]) + dayNote };
     }),
   ];
 
@@ -1905,11 +1916,12 @@ function buildPartyPaceChart(curElec, priors, curLabel) {
     data: { labels, datasets },
     options: {
       responsive: true,
+      aspectRatio: window.innerWidth < 700 ? 1 : 2,   // taller on phones - the legend eats a 2:1 chart
       layout: { padding: { right: 50 } },
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: {
-          display: true,
+          display: window.innerWidth >= 700,   // phones: the caption above explains the line styles
           labels: {
             color: cssVar('--muted'),
             font: { family: "'DM Sans', sans-serif", size: 11 },
@@ -2123,6 +2135,13 @@ function priorElections(cmp) {
 // D-40 before Election Day, D+3 after
 function dayLabel(d) {
   return d >= 0 ? `D-${d}` : `D+${-d}`;
+}
+// A prior election's file at the same point: that day, or if there was no file
+// that day (weekends), the most recent file before it
+function samePoint(elec, day) {
+  return elec.days
+    .filter(d => d.days_before >= day)
+    .sort((a, b) => a.days_before - b.days_before)[0] || null;
 }
 function priorDash(i) {
   return [[6, 4], [2, 3], [10, 3, 2, 3]][i] || [6, 4];
