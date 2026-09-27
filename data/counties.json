@@ -38,20 +38,20 @@
   {
     "CountyName": "Alexandria (City)",
     "TotalMatchedVoters": 12699,
-    "DemVotedCount": 3248,
+    "DemVotedCount": 3302,
     "RepVotedCount": 391,
     "UnknownVotedCount": 13,
     "InPersonCount": 2232,
-    "MailCount": 1420,
+    "MailCount": 1474,
     "InPersonDem": 2003,
     "InPersonRep": 219,
-    "MailDem": 1245,
+    "MailDem": 1299,
     "MailRep": 172,
-    "DemOutCount": 7629,
+    "DemOutCount": 7576,
     "RepOutCount": 758,
     "UnknownOutCount": 45,
-    "VotedCount": 3652,
-    "OutCount": 8432
+    "VotedCount": 3706,
+    "OutCount": 8379
   },
   {
     "CountyName": "Alleghany",
@@ -343,7 +343,7 @@
   },
   {
     "CountyName": "Caroline",
-    "TotalMatchedVoters": 1668,
+    "TotalMatchedVoters": 1673,
     "DemVotedCount": 354,
     "RepVotedCount": 193,
     "UnknownVotedCount": 0,
@@ -354,10 +354,10 @@
     "MailDem": 113,
     "MailRep": 32,
     "DemOutCount": 708,
-    "RepOutCount": 364,
+    "RepOutCount": 366,
     "UnknownOutCount": 4,
     "VotedCount": 547,
-    "OutCount": 1076
+    "OutCount": 1078
   },
   {
     "CountyName": "Carroll",
@@ -677,11 +677,11 @@
     "InPersonRep": 2683,
     "MailDem": 11969,
     "MailRep": 2404,
-    "DemOutCount": 48547,
+    "DemOutCount": 48548,
     "RepOutCount": 8229,
     "UnknownOutCount": 298,
     "VotedCount": 27412,
-    "OutCount": 57074
+    "OutCount": 57075
   },
   {
     "CountyName": "Fairfax (City)",
@@ -829,21 +829,21 @@
   },
   {
     "CountyName": "Fredericksburg (City)",
-    "TotalMatchedVoters": 1923,
-    "DemVotedCount": 422,
-    "RepVotedCount": 96,
+    "TotalMatchedVoters": 1985,
+    "DemVotedCount": 468,
+    "RepVotedCount": 113,
     "UnknownVotedCount": 2,
-    "InPersonCount": 402,
+    "InPersonCount": 465,
     "MailCount": 118,
-    "InPersonDem": 320,
-    "InPersonRep": 80,
+    "InPersonDem": 366,
+    "InPersonRep": 97,
     "MailDem": 102,
     "MailRep": 16,
-    "DemOutCount": 1085,
+    "DemOutCount": 1084,
     "RepOutCount": 215,
     "UnknownOutCount": 5,
-    "VotedCount": 520,
-    "OutCount": 1305
+    "VotedCount": 583,
+    "OutCount": 1304
   },
   {
     "CountyName": "Galax (City)",
@@ -1387,7 +1387,7 @@
   },
   {
     "CountyName": "Martinsville (City)",
-    "TotalMatchedVoters": 657,
+    "TotalMatchedVoters": 656,
     "DemVotedCount": 181,
     "RepVotedCount": 94,
     "UnknownVotedCount": 1,
@@ -1397,11 +1397,11 @@
     "InPersonRep": 76,
     "MailDem": 77,
     "MailRep": 18,
-    "DemOutCount": 291,
+    "DemOutCount": 290,
     "RepOutCount": 63,
     "UnknownOutCount": 1,
     "VotedCount": 276,
-    "OutCount": 355
+    "OutCount": 354
   },
   {
     "CountyName": "Mathews",
@@ -1531,21 +1531,21 @@
   },
   {
     "CountyName": "Norfolk (City)",
-    "TotalMatchedVoters": 11321,
-    "DemVotedCount": 2837,
-    "RepVotedCount": 436,
+    "TotalMatchedVoters": 11495,
+    "DemVotedCount": 2983,
+    "RepVotedCount": 453,
     "UnknownVotedCount": 7,
-    "InPersonCount": 964,
+    "InPersonCount": 1127,
     "MailCount": 2316,
-    "InPersonDem": 854,
-    "InPersonRep": 105,
+    "InPersonDem": 1000,
+    "InPersonRep": 122,
     "MailDem": 1983,
     "MailRep": 331,
-    "DemOutCount": 6569,
+    "DemOutCount": 6574,
     "RepOutCount": 1131,
     "UnknownOutCount": 24,
-    "VotedCount": 3280,
-    "OutCount": 7724
+    "VotedCount": 3443,
+    "OutCount": 7729
   },
   {
     "CountyName": "Northampton",
