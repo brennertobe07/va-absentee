@@ -196,5 +196,27 @@
     "CumMailDem": 43563,
     "CumMailRep": 14104,
     "CumMailUnknown": 113
+  },
+  {
+    "ReturnDate": "2026-09-27",
+    "DayOfWeek": "Sunday",
+    "TotalReturned": 29,
+    "InPersonTotal": 0,
+    "InPersonDem": 0,
+    "InPersonRep": 0,
+    "InPersonUnknown": 0,
+    "MailTotal": 29,
+    "MailDem": 28,
+    "MailRep": 1,
+    "MailUnknown": 0,
+    "CumTotalReturned": 183215,
+    "CumInPersonTotal": 125406,
+    "CumMailTotal": 57809,
+    "CumInPersonDem": 81349,
+    "CumInPersonRep": 43622,
+    "CumInPersonUnknown": 435,
+    "CumMailDem": 43591,
+    "CumMailRep": 14105,
+    "CumMailUnknown": 113
   }
 ]
