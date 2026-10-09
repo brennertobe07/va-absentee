@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-10-08 07:01",
-  "ok": true,
+  "checked_at": "2026-10-09 07:01",
+  "ok": false,
   "steps": [
     {
       "name": "Pipeline",
       "time": "05:55",
-      "ok": true,
-      "detail": "750,909 ballots loaded"
+      "ok": false,
+      "detail": "G:\\ still not available after 10 min \u2014 is Google Drive for desktop running?"
     },
     {
       "name": "DNC drop",
