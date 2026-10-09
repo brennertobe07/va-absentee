@@ -1,22 +1,22 @@
 {
-  "checked_at": "2026-10-09 07:01",
-  "ok": false,
+  "checked_at": "2026-10-09 13:04",
+  "ok": true,
   "steps": [
     {
       "name": "Pipeline",
-      "time": "05:55",
-      "ok": false,
-      "detail": "G:\\ still not available after 10 min \u2014 is Google Drive for desktop running?"
+      "time": "13:00",
+      "ok": true,
+      "detail": "774,197 ballots loaded"
     },
     {
       "name": "DNC drop",
-      "time": "05:56",
+      "time": "13:01",
       "ok": true,
       "detail": "Uploaded to DNC bucket"
     },
     {
       "name": "Dashboards",
-      "time": "07:01",
+      "time": "13:04",
       "ok": true,
       "detail": "Exported"
     }
