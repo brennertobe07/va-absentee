@@ -19,39 +19,39 @@
   },
   {
     "CountyName": "Albemarle",
-    "TotalMatchedVoters": 15962,
-    "DemVotedCount": 9366,
-    "RepVotedCount": 2037,
-    "UnknownVotedCount": 65,
+    "TotalMatchedVoters": 16024,
+    "DemVotedCount": 9607,
+    "RepVotedCount": 2087,
+    "UnknownVotedCount": 66,
     "InPersonCount": 8565,
-    "MailCount": 2903,
+    "MailCount": 3195,
     "InPersonDem": 6892,
     "InPersonRep": 1617,
-    "MailDem": 2474,
-    "MailRep": 420,
-    "DemOutCount": 3232,
-    "RepOutCount": 674,
-    "UnknownOutCount": 40,
-    "VotedCount": 11468,
-    "OutCount": 3946
+    "MailDem": 2715,
+    "MailRep": 470,
+    "DemOutCount": 3019,
+    "RepOutCount": 626,
+    "UnknownOutCount": 42,
+    "VotedCount": 11760,
+    "OutCount": 3687
   },
   {
     "CountyName": "Alexandria (City)",
-    "TotalMatchedVoters": 16951,
-    "DemVotedCount": 9310,
+    "TotalMatchedVoters": 16950,
+    "DemVotedCount": 9337,
     "RepVotedCount": 1087,
     "UnknownVotedCount": 62,
     "InPersonCount": 5898,
-    "MailCount": 4561,
+    "MailCount": 4588,
     "InPersonDem": 5223,
     "InPersonRep": 633,
-    "MailDem": 4087,
+    "MailDem": 4114,
     "MailRep": 454,
-    "DemOutCount": 4850,
-    "RepOutCount": 476,
+    "DemOutCount": 4824,
+    "RepOutCount": 475,
     "UnknownOutCount": 61,
-    "VotedCount": 10459,
-    "OutCount": 5387
+    "VotedCount": 10486,
+    "OutCount": 5360
   },
   {
     "CountyName": "Alleghany",
@@ -415,7 +415,7 @@
   },
   {
     "CountyName": "Charlottesville (City)",
-    "TotalMatchedVoters": 5685,
+    "TotalMatchedVoters": 5684,
     "DemVotedCount": 3819,
     "RepVotedCount": 251,
     "UnknownVotedCount": 34,
@@ -451,7 +451,7 @@
   },
   {
     "CountyName": "Chesterfield",
-    "TotalMatchedVoters": 33917,
+    "TotalMatchedVoters": 33956,
     "DemVotedCount": 14586,
     "RepVotedCount": 7611,
     "UnknownVotedCount": 89,
@@ -461,11 +461,11 @@
     "InPersonRep": 4671,
     "MailDem": 6747,
     "MailRep": 2940,
-    "DemOutCount": 7118,
-    "RepOutCount": 3221,
-    "UnknownOutCount": 49,
+    "DemOutCount": 7126,
+    "RepOutCount": 3231,
+    "UnknownOutCount": 50,
     "VotedCount": 22286,
-    "OutCount": 10388
+    "OutCount": 10407
   },
   {
     "CountyName": "Clarke",
@@ -937,7 +937,7 @@
   },
   {
     "CountyName": "Greene",
-    "TotalMatchedVoters": 2386,
+    "TotalMatchedVoters": 2387,
     "DemVotedCount": 917,
     "RepVotedCount": 952,
     "UnknownVotedCount": 6,
@@ -1459,7 +1459,7 @@
   },
   {
     "CountyName": "Montgomery",
-    "TotalMatchedVoters": 8176,
+    "TotalMatchedVoters": 8177,
     "DemVotedCount": 3884,
     "RepVotedCount": 2163,
     "UnknownVotedCount": 29,
@@ -1523,11 +1523,11 @@
     "InPersonRep": 901,
     "MailDem": 2242,
     "MailRep": 458,
-    "DemOutCount": 3519,
-    "RepOutCount": 841,
+    "DemOutCount": 3510,
+    "RepOutCount": 839,
     "UnknownOutCount": 22,
     "VotedCount": 6382,
-    "OutCount": 4382
+    "OutCount": 4371
   },
   {
     "CountyName": "Norfolk (City)",
@@ -1784,20 +1784,20 @@
   {
     "CountyName": "Prince George",
     "TotalMatchedVoters": 2661,
-    "DemVotedCount": 1060,
-    "RepVotedCount": 919,
+    "DemVotedCount": 1065,
+    "RepVotedCount": 924,
     "UnknownVotedCount": 13,
     "InPersonCount": 1509,
-    "MailCount": 483,
+    "MailCount": 493,
     "InPersonDem": 772,
     "InPersonRep": 727,
-    "MailDem": 288,
-    "MailRep": 192,
-    "DemOutCount": 331,
-    "RepOutCount": 285,
+    "MailDem": 293,
+    "MailRep": 197,
+    "DemOutCount": 326,
+    "RepOutCount": 280,
     "UnknownOutCount": 2,
-    "VotedCount": 1992,
-    "OutCount": 618
+    "VotedCount": 2002,
+    "OutCount": 608
   },
   {
     "CountyName": "Prince William",
@@ -2197,7 +2197,7 @@
   },
   {
     "CountyName": "Tazewell",
-    "TotalMatchedVoters": 2173,
+    "TotalMatchedVoters": 2174,
     "DemVotedCount": 539,
     "RepVotedCount": 1119,
     "UnknownVotedCount": 4,
@@ -2216,19 +2216,19 @@
   {
     "CountyName": "Virginia Beach (City)",
     "TotalMatchedVoters": 41729,
-    "DemVotedCount": 15961,
+    "DemVotedCount": 15962,
     "RepVotedCount": 9061,
     "UnknownVotedCount": 97,
     "InPersonCount": 12694,
-    "MailCount": 12425,
+    "MailCount": 12426,
     "InPersonDem": 7617,
     "InPersonRep": 5009,
-    "MailDem": 8344,
+    "MailDem": 8345,
     "MailRep": 4052,
     "DemOutCount": 9604,
     "RepOutCount": 5305,
     "UnknownOutCount": 94,
-    "VotedCount": 25119,
+    "VotedCount": 25120,
     "OutCount": 15003
   },
   {
@@ -2377,7 +2377,7 @@
   },
   {
     "CountyName": "York",
-    "TotalMatchedVoters": 9387,
+    "TotalMatchedVoters": 9388,
     "DemVotedCount": 3981,
     "RepVotedCount": 3462,
     "UnknownVotedCount": 52,
@@ -2387,10 +2387,10 @@
     "InPersonRep": 2978,
     "MailDem": 973,
     "MailRep": 484,
-    "DemOutCount": 971,
+    "DemOutCount": 972,
     "RepOutCount": 664,
     "UnknownOutCount": 19,
     "VotedCount": 7495,
-    "OutCount": 1654
+    "OutCount": 1655
   }
 ]
