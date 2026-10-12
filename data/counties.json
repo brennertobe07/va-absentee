@@ -19,7 +19,7 @@
   },
   {
     "CountyName": "Albemarle",
-    "TotalMatchedVoters": 16024,
+    "TotalMatchedVoters": 16025,
     "DemVotedCount": 9607,
     "RepVotedCount": 2087,
     "UnknownVotedCount": 66,
@@ -37,21 +37,21 @@
   },
   {
     "CountyName": "Alexandria (City)",
-    "TotalMatchedVoters": 16950,
-    "DemVotedCount": 9337,
+    "TotalMatchedVoters": 16999,
+    "DemVotedCount": 9366,
     "RepVotedCount": 1087,
     "UnknownVotedCount": 62,
     "InPersonCount": 5898,
-    "MailCount": 4588,
+    "MailCount": 4617,
     "InPersonDem": 5223,
     "InPersonRep": 633,
-    "MailDem": 4114,
+    "MailDem": 4143,
     "MailRep": 454,
-    "DemOutCount": 4824,
+    "DemOutCount": 4810,
     "RepOutCount": 475,
-    "UnknownOutCount": 61,
-    "VotedCount": 10486,
-    "OutCount": 5360
+    "UnknownOutCount": 65,
+    "VotedCount": 10515,
+    "OutCount": 5350
   },
   {
     "CountyName": "Alleghany",
@@ -451,21 +451,21 @@
   },
   {
     "CountyName": "Chesterfield",
-    "TotalMatchedVoters": 33956,
-    "DemVotedCount": 14586,
-    "RepVotedCount": 7611,
-    "UnknownVotedCount": 89,
+    "TotalMatchedVoters": 33999,
+    "DemVotedCount": 14655,
+    "RepVotedCount": 7629,
+    "UnknownVotedCount": 90,
     "InPersonCount": 12575,
-    "MailCount": 9711,
+    "MailCount": 9799,
     "InPersonDem": 7839,
     "InPersonRep": 4671,
-    "MailDem": 6747,
-    "MailRep": 2940,
-    "DemOutCount": 7126,
-    "RepOutCount": 3231,
+    "MailDem": 6816,
+    "MailRep": 2958,
+    "DemOutCount": 7064,
+    "RepOutCount": 3217,
     "UnknownOutCount": 50,
-    "VotedCount": 22286,
-    "OutCount": 10407
+    "VotedCount": 22374,
+    "OutCount": 10331
   },
   {
     "CountyName": "Clarke",
@@ -667,7 +667,7 @@
   },
   {
     "CountyName": "Fairfax",
-    "TotalMatchedVoters": 111612,
+    "TotalMatchedVoters": 111613,
     "DemVotedCount": 50360,
     "RepVotedCount": 11905,
     "UnknownVotedCount": 307,
@@ -677,11 +677,11 @@
     "InPersonRep": 7015,
     "MailDem": 25700,
     "MailRep": 4890,
-    "DemOutCount": 36199,
+    "DemOutCount": 36200,
     "RepOutCount": 6074,
     "UnknownOutCount": 360,
     "VotedCount": 62572,
-    "OutCount": 42633
+    "OutCount": 42634
   },
   {
     "CountyName": "Fairfax (City)",
@@ -1261,7 +1261,7 @@
   },
   {
     "CountyName": "Loudoun",
-    "TotalMatchedVoters": 38652,
+    "TotalMatchedVoters": 38653,
     "DemVotedCount": 14580,
     "RepVotedCount": 6203,
     "UnknownVotedCount": 132,
@@ -1272,10 +1272,10 @@
     "MailDem": 6809,
     "MailRep": 2391,
     "DemOutCount": 10709,
-    "RepOutCount": 4060,
+    "RepOutCount": 4061,
     "UnknownOutCount": 129,
     "VotedCount": 20915,
-    "OutCount": 14898
+    "OutCount": 14899
   },
   {
     "CountyName": "Louisa",
@@ -1531,21 +1531,21 @@
   },
   {
     "CountyName": "Norfolk (City)",
-    "TotalMatchedVoters": 13482,
-    "DemVotedCount": 6554,
-    "RepVotedCount": 954,
-    "UnknownVotedCount": 21,
-    "InPersonCount": 2860,
+    "TotalMatchedVoters": 13733,
+    "DemVotedCount": 6747,
+    "RepVotedCount": 975,
+    "UnknownVotedCount": 23,
+    "InPersonCount": 3076,
     "MailCount": 4669,
-    "InPersonDem": 2523,
-    "InPersonRep": 325,
+    "InPersonDem": 2716,
+    "InPersonRep": 346,
     "MailDem": 4031,
     "MailRep": 629,
-    "DemOutCount": 4446,
-    "RepOutCount": 814,
+    "DemOutCount": 4454,
+    "RepOutCount": 815,
     "UnknownOutCount": 29,
-    "VotedCount": 7529,
-    "OutCount": 5289
+    "VotedCount": 7745,
+    "OutCount": 5298
   },
   {
     "CountyName": "Northampton",
@@ -1891,7 +1891,7 @@
   },
   {
     "CountyName": "Richmond (City)",
-    "TotalMatchedVoters": 16022,
+    "TotalMatchedVoters": 16023,
     "DemVotedCount": 8369,
     "RepVotedCount": 856,
     "UnknownVotedCount": 43,
@@ -1909,7 +1909,7 @@
   },
   {
     "CountyName": "Roanoke",
-    "TotalMatchedVoters": 10089,
+    "TotalMatchedVoters": 10114,
     "DemVotedCount": 3874,
     "RepVotedCount": 3731,
     "UnknownVotedCount": 33,
@@ -1919,11 +1919,11 @@
     "InPersonRep": 2915,
     "MailDem": 1191,
     "MailRep": 816,
-    "DemOutCount": 1096,
-    "RepOutCount": 1093,
-    "UnknownOutCount": 9,
+    "DemOutCount": 1099,
+    "RepOutCount": 1099,
+    "UnknownOutCount": 10,
     "VotedCount": 7638,
-    "OutCount": 2198
+    "OutCount": 2208
   },
   {
     "CountyName": "Roanoke (City)",
@@ -2089,7 +2089,7 @@
   },
   {
     "CountyName": "Spotsylvania",
-    "TotalMatchedVoters": 13272,
+    "TotalMatchedVoters": 13302,
     "DemVotedCount": 5208,
     "RepVotedCount": 3542,
     "UnknownVotedCount": 37,
@@ -2099,11 +2099,11 @@
     "InPersonRep": 2579,
     "MailDem": 2098,
     "MailRep": 963,
-    "DemOutCount": 2445,
-    "RepOutCount": 1571,
+    "DemOutCount": 2448,
+    "RepOutCount": 1575,
     "UnknownOutCount": 21,
     "VotedCount": 8787,
-    "OutCount": 4037
+    "OutCount": 4044
   },
   {
     "CountyName": "Stafford",
@@ -2143,7 +2143,7 @@
   },
   {
     "CountyName": "Suffolk (City)",
-    "TotalMatchedVoters": 9701,
+    "TotalMatchedVoters": 9702,
     "DemVotedCount": 4550,
     "RepVotedCount": 1933,
     "UnknownVotedCount": 24,
@@ -2197,7 +2197,7 @@
   },
   {
     "CountyName": "Tazewell",
-    "TotalMatchedVoters": 2174,
+    "TotalMatchedVoters": 2175,
     "DemVotedCount": 539,
     "RepVotedCount": 1119,
     "UnknownVotedCount": 4,
@@ -2215,20 +2215,20 @@
   },
   {
     "CountyName": "Virginia Beach (City)",
-    "TotalMatchedVoters": 41729,
-    "DemVotedCount": 15962,
+    "TotalMatchedVoters": 41730,
+    "DemVotedCount": 15963,
     "RepVotedCount": 9061,
     "UnknownVotedCount": 97,
-    "InPersonCount": 12694,
+    "InPersonCount": 12695,
     "MailCount": 12426,
-    "InPersonDem": 7617,
+    "InPersonDem": 7618,
     "InPersonRep": 5009,
     "MailDem": 8345,
     "MailRep": 4052,
     "DemOutCount": 9604,
     "RepOutCount": 5305,
     "UnknownOutCount": 94,
-    "VotedCount": 25120,
+    "VotedCount": 25121,
     "OutCount": 15003
   },
   {
