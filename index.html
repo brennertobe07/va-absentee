@@ -246,6 +246,9 @@
 
   /* ── STAT CARDS ── */
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  /* By CD cards carry a "CD 01 — " prefix; 160px keeps "In-Person" on one line */
+  #cd-stat-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  #cd-stat-grid .stat-label { white-space: nowrap; }
   .stat-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 14px;
