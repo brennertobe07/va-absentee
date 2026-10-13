@@ -1090,6 +1090,10 @@ function renderCDs(main) {
                  sub: `${fmt(r.CountyCount)} localities` });
     cards.push({ cls:'ip',    label:`CD ${r.CD} — Voted`,    val: r.VotedCount,
                  sub: pct(r.VotedCount, tot) + ' return rate' });
+    cards.push({ cls:'ip',    label:`CD ${r.CD} — In-Person`, val: r.InPersonCount,
+                 sub: pct(r.InPersonCount, r.VotedCount) + ' of returned' });
+    cards.push({ cls:'out',   label:`CD ${r.CD} — Mail`,     val: r.MailCount,
+                 sub: pct(r.MailCount, r.VotedCount) + ' of returned' });
     cards.push({ cls:'dem',   label:`CD ${r.CD} — Dem Out`,  val: r.DemOutCount,
                  sub: pct(r.DemOutCount, r.OutCount) + ' of still out' });
     cards.push({ cls:'rep',   label:`CD ${r.CD} — Rep Out`,  val: r.RepOutCount,
