@@ -1,22 +1,22 @@
 {
-  "checked_at": "2026-10-14 10:52",
-  "ok": false,
+  "checked_at": "2026-10-14 10:59",
+  "ok": true,
   "steps": [
     {
       "name": "Pipeline",
-      "time": "10:50",
-      "ok": false,
-      "detail": "Extraction failed: [Errno 13] Permission denied: 'C:\\\\Absentee\\\\26Gen\\\\Daily_List\\\\Daily_Absentee_List.csv'"
+      "time": "10:56",
+      "ok": true,
+      "detail": "849,595 ballots loaded"
     },
     {
       "name": "DNC drop",
-      "time": null,
-      "ok": false,
-      "detail": "Not attempted - pipeline stopped before the upload"
+      "time": "05:56",
+      "ok": true,
+      "detail": "Uploaded to DNC bucket"
     },
     {
       "name": "Dashboards",
-      "time": "10:52",
+      "time": "10:59",
       "ok": true,
       "detail": "Exported"
     }
