@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-15 07:01",
-  "ok": false,
+  "checked_at": "2026-10-15 08:05",
+  "ok": true,
   "steps": [
     {
       "name": "Pipeline",
       "time": "05:55",
-      "ok": false,
-      "detail": "DNC upload failed: ('invalid_grant: Invalid JWT Signature.', {'error': 'invalid_grant', 'error_description': 'Invalid JWT Signature.'})"
+      "ok": true,
+      "detail": "877,120 ballots loaded"
     },
     {
       "name": "DNC drop",
-      "time": "05:56",
-      "ok": false,
-      "detail": "Upload failed"
+      "time": "08:02",
+      "ok": true,
+      "detail": "Uploaded to DNC bucket (resent after key renewal)"
     },
     {
       "name": "Dashboards",
