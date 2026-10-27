@@ -1262,7 +1262,8 @@ function buildRaceCallouts(sel, id) {
   items.push(`<div class="callout" style="border-color:var(${under.x.v})">
     <div class="big">${under.d.toFixed(1)} pts</div>
     ${under.x.k} voters are ${pctTxt(raceShare(reg, under.x.k))} of ${where}'s registered voters but
-    ${pctTxt(raceShare(now, under.x.k))} of ballots returned so far — the largest gap ${area}.</div>`);
+    ${pctTxt(raceShare(now, under.x.k))} of ballots returned so far — the largest gap ${area}.
+    Only part of the electorate has voted so far, so this gap will shift as more ballots come in.</div>`);
 
   items.push(`<div class="callout">
     <div class="big">Turnout rate</div>
