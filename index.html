@@ -22,6 +22,42 @@
   thead tr.col-groups th { text-align: center; color: var(--text); border-bottom: 0; padding-bottom: 2px; }
   th.grp-start, td.grp-start { border-left: 1px solid var(--border); }
 
+  /* By Race tab. Race colours stay off the party blue/red so nothing reads as partisan;
+     ▲▼ are direction only, no good/bad colouring. */
+  .race-sub { font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .race-ctrls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .seg button { background: transparent; color: var(--muted); border: 0; padding: 5px 11px;
+                font: 500 .74rem var(--sans); cursor: pointer; }
+  .seg button.on { background: var(--accent); color: #fff; }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .swatch { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .delta { font-size: .68rem; margin-left: 5px; color: var(--text); opacity: .7; }
+  .delta.flat { color: var(--muted); opacity: 1; }
+  .mini { display: flex; height: 10px; width: 140px; border-radius: 3px; overflow: hidden; margin-left: auto; }
+  .mini span, .race-bar span { display: block; height: 100%; }
+  tr.sel td { background: rgba(59,130,246,0.10); }
+  tr.total-row td { font-weight: 600; border-top: 2px solid var(--border); }
+  .race-two { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; }
+  @media (max-width: 900px) { .race-two { grid-template-columns: 1fr; } }
+  .race-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: .72rem; color: var(--muted); }
+  .cycles { padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; }
+  .cyc-row { display: grid; grid-template-columns: 150px 1fr 80px; gap: 12px; align-items: center; }
+  .cyc-label { font-size: .78rem; }
+  .cyc-label small { display: block; color: var(--muted); font-size: .66rem; }
+  .cyc-row.now .cyc-label { font-weight: 700; color: var(--accent); }
+  .cyc-row.reg .race-bar { opacity: .75; }
+  .race-bar { display: flex; height: 26px; border-radius: 4px; overflow: hidden; background: var(--surface2); }
+  .race-bar span { display: flex; align-items: center; justify-content: center;
+                   font: 500 .68rem var(--mono); color: #0f1117; overflow: hidden; white-space: nowrap; }
+  .cyc-n { font-family: var(--mono); font-size: .72rem; color: var(--muted); text-align: right; }
+  @media (max-width: 560px) { .cyc-row { grid-template-columns: 96px 1fr; } .cyc-n { display: none; } }
+  .callouts { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: .8rem; }
+  .callout { background: var(--surface2); border-radius: 6px; padding: 10px 12px; border-left: 3px solid var(--accent); }
+  .callout .big { font-family: var(--mono); font-size: 1.15rem; }
+  .race-notes { font-size: .72rem; color: var(--muted); line-height: 1.6; }
+  .race-notes li { margin-left: 18px; }
+
   :root {
     --dem:      #2166ac;
     --dem-lt:   #74add1;
@@ -45,6 +81,11 @@
     --radius:   8px;
     --mono:     'DM Mono', monospace;
     --sans:     'DM Sans', sans-serif;
+    --r-w:      #94a3b8;
+    --r-b:      #e0a43a;
+    --r-h:      #2bb3a3;
+    --r-a:      #c678dd;
+    --r-o:      #4a4f63;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -816,6 +857,7 @@ UDk/hX7zfCL/AINOPhd4dngm8YePfFPiXy23SW1pDFYwy/8AAhlx+dfcf7MH/BLT4F/sg+VJ4K+H
     <div class="top-tabs">
       <button class="top-tab active" data-tab="summary">Summary</button>
       <button class="top-tab" data-tab="cd">By CD</button>
+      <button class="top-tab" data-tab="race">By Race</button>
       <button class="top-tab" data-tab="trends">Daily Trends</button>
       <button class="top-tab" data-tab="comparison">Historical Comparison</button>
       <button class="top-tab" data-tab="key">Key</button>
@@ -893,7 +935,7 @@ async function loadPipelineStatus() {
 // ── BOOT ──────────────────────────────────────────────────────────────────
 async function loadData() {
   try {
-    const [summary, counties, precincts, daily, meta, comparison, cds] = await Promise.all([
+    const [summary, counties, precincts, daily, meta, comparison, cds, race] = await Promise.all([
       fetch('data/summary.json').then(r => r.json()),
       fetch('data/counties.json').then(r => r.json()),
       fetch('data/precincts.json').then(r => r.json()),
@@ -901,8 +943,9 @@ async function loadData() {
       fetch('data/metadata.json').then(r => r.json()),
       fetch('data/comparison.json').then(r => r.json()).catch(() => null),
       fetch('data/cds.json').then(r => r.json()).catch(() => null),
+      fetch('data/race.json').then(r => r.json()).catch(() => null),
     ]);
-    DATA = { summary, counties, precincts, daily, meta, comparison, cds };
+    DATA = { summary, counties, precincts, daily, meta, comparison, cds, race };
 
     document.getElementById('last-updated').textContent = `Updated: ${meta.last_updated}`;
 
@@ -944,7 +987,8 @@ document.querySelectorAll('.top-tab').forEach(btn => {
     btn.classList.add('active');
     const layout = document.getElementById('layout');
     layout.classList.toggle('no-sidebar',
-      currentTab === 'trends' || currentTab === 'comparison' || currentTab === 'cd' || currentTab === 'key');
+      currentTab === 'trends' || currentTab === 'comparison' || currentTab === 'cd' ||
+      currentTab === 'race' || currentTab === 'key');
     renderView();
   });
 });
@@ -994,6 +1038,8 @@ function renderView() {
     renderTrends(main);
   } else if (currentTab === 'cd') {
     renderCDs(main);
+  } else if (currentTab === 'race') {
+    renderRace(main);
   } else if (currentTab === 'comparison') {
     renderPartyPace(main);
   } else if (currentTab === 'key') {
@@ -1005,6 +1051,211 @@ function renderView() {
   }
 }
 
+
+// ── BY RACE ───────────────────────────────────────────────────────────────
+// Modeled race (VAN CodedRaceName) of returned ballots, by CD and statewide,
+// against one past cycle and against registered voters. data/race.json comes
+// from build_race() in build_absentee_json.py. Shares leave out voters with no
+// VAN match; the five groups sum to 100.
+const RACES = [
+  { k: 'White',    v: '--r-w' },
+  { k: 'Black',    v: '--r-b' },
+  { k: 'Hispanic', v: '--r-h' },
+  { k: 'API',      v: '--r-a' },
+  { k: 'Other',    v: '--r-o' },
+];
+let raceSelected = null;
+let raceMode     = 'share';   // share | rate
+let raceCmp      = null;      // baseline cycle key, or 'REG'
+
+function raceRow(cycle, cd) {
+  const c = DATA.race.cycles[cycle];
+  const r = cd === 'VA' ? c.statewide : (c.districts[cd] || null);
+  if (!r) return null;
+  return { ...r, n: RACES.reduce((s, x) => s + (r[x.k] || 0), 0) };
+}
+const raceShare = (r, k) => r && r.n ? 100 * r[k] / r.n : null;
+const raceRate  = (cd, k) => {
+  const now = raceRow(DATA.race.current, cd), reg = raceRow('REG', cd);
+  return now && reg && reg[k] ? 100 * now[k] / reg[k] : null;
+};
+const pctTxt = v => v === null ? '—' : v.toFixed(1) + '%';
+
+function raceDelta(d) {
+  if (d === null || isNaN(d)) return '';
+  if (Math.abs(d) < 0.5) return `<span class="delta flat">·${Math.abs(d).toFixed(1)}</span>`;
+  return `<span class="delta">${d > 0 ? '▲' : '▼'}${Math.abs(d).toFixed(1)}</span>`;
+}
+
+function renderRace(main) {
+  const data = DATA.race;
+  if (!data || !data.cycles || !data.cycles[data.current]) {
+    main.innerHTML = `<div class="loading">No race data. Re-run build_absentee_json.py.</div>`;
+    return;
+  }
+  const targets = data.targets || [];
+  if (raceCmp === null) raceCmp = data.baseline;
+  if (raceSelected === null) raceSelected = targets[0] || 'VA';
+  const base = data.cycles[data.baseline];
+
+  main.innerHTML = `
+    <div>
+      <div class="section-banner">Returned Ballots by Race / Ethnicity <span class="race-sub" style="font-size:.8rem;color:var(--muted)">(modeled)</span></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <h3>By District</h3>
+        <div class="race-ctrls">
+          <div class="seg" id="race-mode">
+            <button data-m="share">Share of ballots</button>
+            <button data-m="rate">Turnout rate</button>
+          </div>
+          <div class="seg" id="race-cmp">
+            <button data-c="${data.baseline}">vs ${base.label.slice(0, 4)}</button>
+            <button data-c="REG">vs registered</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-scroll"><table id="race-table"></table></div>
+      <div class="table-footer" id="race-footer"></div>
+    </div>
+    <div class="race-two">
+      <div class="table-wrap">
+        <div class="table-header"><h3 id="race-cyc-title"></h3>
+          <div class="race-legend">${RACES.map(x =>
+            `<span><i class="swatch" style="background:var(${x.v})"></i>${x.k}</span>`).join('')}</div>
+        </div>
+        <div class="cycles" id="race-cycles"></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><h3>What stands out</h3></div>
+        <div class="callouts" id="race-callouts"></div>
+      </div>
+    </div>
+    <div class="race-notes"><ul>
+      <li>Race is modeled: VAN <code>CodedRaceName</code>, all confidence levels. API is the model's Asian group; Other covers Other, Native American and unscored voters. Voters with no VAN match are left out.</li>
+      <li>${esc(data.cycles[data.current].label)} counts returned ballots (Marked, Pre-Processed, On Machine) through this morning's file. ${esc(base.label)} is the final early vote from the voter history file — not a same-day comparison.</li>
+      <li>${esc(base.label)} is a midterm on the same CD lines. Past voters get their race from today's VAN file, so voters removed since then aren't counted.</li>
+      <li>Statewide also shows the ${esc(data.cycles[data.statewide_extra].label)} (presidential); it isn't shown by district because that file has no CD.</li>
+      <li>Turnout rate = returned ballots ÷ registered voters of that group in the district.</li>
+    </ul></div>`;
+
+  document.querySelectorAll('#race-mode button').forEach(b => {
+    b.classList.toggle('on', b.dataset.m === raceMode);
+    b.onclick = () => { raceMode = b.dataset.m; renderRace(main); };
+  });
+  document.querySelectorAll('#race-cmp button').forEach(b => {
+    b.classList.toggle('on', b.dataset.c === raceCmp);
+    b.onclick = () => { raceCmp = b.dataset.c; renderRace(main); };
+  });
+  document.getElementById('race-cmp').style.display = raceMode === 'share' ? '' : 'none';
+
+  buildRaceTable(main);
+  buildRaceCycles();
+  buildRaceCallouts();
+}
+
+function buildRaceTable(main) {
+  const data = DATA.race;
+  const cds  = Object.keys(data.cycles[data.current].districts).sort();
+  const cell = (cd, k) => {
+    if (raceMode === 'rate') return pctTxt(raceRate(cd, k));
+    const now = raceShare(raceRow(data.current, cd), k);
+    const was = raceShare(raceRow(raceCmp, cd), k);
+    return pctTxt(now) + raceDelta(now !== null && was !== null ? now - was : null);
+  };
+  const mini = r => `<div class="mini">${RACES.map(x =>
+    `<span style="width:${raceShare(r, x.k) || 0}%;background:var(${x.v})"></span>`).join('')}</div>`;
+  const row = (cd, label, cls) => {
+    const r = raceRow(data.current, cd);
+    return `<tr class="${cls}" data-cd="${cd}">
+      <td><strong>${label}</strong></td>
+      <td>${(data.targets || []).includes(cd) ? '<span class="badge badge-target">TARGET</span>' : ''}</td>
+      ${RACES.map((x, i) => `<td${i === 0 ? ' class="grp-start"' : ''}>${cell(cd, x.k)}</td>`).join('')}
+      <td class="grp-start">${mini(r)}</td>
+      <td>${fmt(r.n)}</td>
+    </tr>`;
+  };
+
+  let html = '<thead><tr><th>CD</th><th></th>'
+    + RACES.map((x, i) => `<th${i === 0 ? ' class="grp-start"' : ''}><i class="swatch" style="background:var(${x.v})"></i>${x.k}</th>`).join('')
+    + '<th class="grp-start">Mix</th><th>Returned</th></tr></thead><tbody>';
+  cds.forEach(cd => {
+    const t = (data.targets || []).includes(cd);
+    html += row(cd, cd, `clickable${t ? ' target-row' : ''}${cd === raceSelected ? ' sel' : ''}`);
+  });
+  html += row('VA', 'Statewide', `clickable total-row${raceSelected === 'VA' ? ' sel' : ''}`);
+  html += '</tbody>';
+
+  const tbl = document.getElementById('race-table');
+  tbl.innerHTML = html;
+  tbl.querySelectorAll('tr[data-cd]').forEach(tr =>
+    tr.addEventListener('click', () => { raceSelected = tr.dataset.cd; renderRace(main); }));
+
+  const cmpLabel = raceCmp === 'REG' ? 'share of registered voters'
+                                     : `${data.cycles[raceCmp].label} final early-vote share`;
+  document.getElementById('race-footer').textContent = raceMode === 'share'
+    ? `Share of returned ballots. ▲▼ = points vs ${cmpLabel}. Click a row to compare cycles below.`
+    : `Returned ballots ÷ registered voters in that group. Click a row to compare cycles below.`;
+}
+
+function buildRaceCycles() {
+  const data = DATA.race;
+  const isVA = raceSelected === 'VA';
+  document.getElementById('race-cyc-title').textContent =
+    `${isVA ? 'Statewide' : 'CD ' + raceSelected}: early-vote mix by cycle`;
+  const order = [
+    ['REG', 'current file', 'reg'],
+    [data.baseline, 'final', ''],
+    ...(isVA ? [[data.statewide_extra, 'final · presidential', '']] : []),
+    [data.current, 'to date', 'now'],
+  ];
+  document.getElementById('race-cycles').innerHTML = order.map(([c, sub, cls]) => {
+    const r = raceRow(c, raceSelected);
+    if (!r) return '';
+    return `<div class="cyc-row ${cls}">
+      <div class="cyc-label">${esc(data.cycles[c].label)}<small>${sub}</small></div>
+      <div class="race-bar">${RACES.map(x => {
+        const p = raceShare(r, x.k) || 0;
+        return `<span style="width:${p}%;background:var(${x.v})" title="${x.k} ${p.toFixed(1)}%">${p >= 6 ? p.toFixed(0) + '%' : ''}</span>`;
+      }).join('')}</div>
+      <div class="cyc-n">${fmt(r.n)}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildRaceCallouts() {
+  const data  = DATA.race;
+  const sel   = raceSelected;
+  const where = sel === 'VA' ? 'Virginia' : `CD ${sel}`;
+  const area  = sel === 'VA' ? 'statewide' : 'in the district';
+  const now   = raceRow(data.current, sel), reg = raceRow('REG', sel), was = raceRow(data.baseline, sel);
+  const four  = RACES.slice(0, 4);
+  const items = [];
+
+  const under = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(reg, x.k) }))
+                    .sort((a, b) => a.d - b.d)[0];
+  items.push(`<div class="callout" style="border-color:var(${under.x.v})">
+    <div class="big">${under.d.toFixed(1)} pts</div>
+    ${under.x.k} voters are ${pctTxt(raceShare(reg, under.x.k))} of ${where}'s registered voters but
+    ${pctTxt(raceShare(now, under.x.k))} of ballots returned so far — the largest gap ${area}.</div>`);
+
+  items.push(`<div class="callout">
+    <div class="big">Turnout rate</div>
+    Share of each group's registered voters who've returned a ballot:
+    ${four.map(x => `${x.k} <b>${pctTxt(raceRate(sel, x.k))}</b>`).join(' · ')}</div>`);
+
+  // The group whose share moved most vs the baseline cycle
+  const moved = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(was, x.k) }))
+                    .sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
+  items.push(`<div class="callout" style="border-color:var(${moved.x.v})">
+    <div class="big">${moved.d >= 0 ? '+' : ''}${moved.d.toFixed(1)} pts</div>
+    ${moved.x.k} share of the early vote vs the ${esc(data.cycles[data.baseline].label)} final
+    (${pctTxt(raceShare(was, moved.x.k))} → ${pctTxt(raceShare(now, moved.x.k))}) — the biggest shift ${area}.
+    This cycle isn't final yet, so it will move as late ballots come in.</div>`);
+
+  document.getElementById('race-callouts').innerHTML = items.join('');
+}
 
 // ── KEY / DEFINITIONS ─────────────────────────────────────────────────────
 // Mirrors build_absentee_json.py. Change both together.
@@ -1036,6 +1287,13 @@ function renderKey(main) {
       ['Score buckets', 'Counts pulled in VoteBuilder by score alone (0–49 / 50–100) won\'t match Dem / Rep here, because this dashboard puts party ID first — a lean Dem with a score of 40 is Dem here but lands in VoteBuilder\'s 0–49 bucket.'],
       ['Suppressions', 'VoteBuilder applies suppressions (bad mailing addresses, etc.) by default. Turn them off before comparing.'],
       ['Timing', 'This dashboard uses the SBE absentee file from this morning. VoteBuilder\'s absentee data can lag a day or more.'],
+    ])}
+    ${section('By Race', [
+      ['Race', 'Modeled, not self-reported: VAN <code>CodedRaceName</code>, every confidence level. Virginia does not record race on the voter file. API is the model\'s Asian group; Other covers Other, Native American and unscored voters.'],
+      ['Share of ballots', 'Each group\'s share of returned ballots matched to VAN. Voters with no VAN match are left out, so the five groups sum to 100.'],
+      ['Turnout rate', 'Returned ballots ÷ registered voters of that group in the district (current VAN file).'],
+      ['2022 baseline', 'Final early vote from the 2022 General voter history file (same CD lines, a midterm). It is a final total, not a same-day comparison. 2022 voters get today\'s VAN race, so voters removed since then aren\'t counted.'],
+      ['2024 (statewide only)', 'Final early vote from the 2024 General. Shown statewide only — that history file has no CD column.'],
     ])}
     ${section('Historical Comparison', [
       ['Alignment', 'Elections are lined up by days before Election Day, not by calendar date.'],

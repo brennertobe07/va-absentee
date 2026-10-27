@@ -22,7 +22,10 @@ SERVER      = r"INSTANCE-1"
 DATABASE    = "absentee"
 ODBC_DRIVER = "ODBC Driver 17 for SQL Server"
 
-REPO_ROOT   = r"C:\Scripts\Python\Python_Absentee\dashboards\va-absentee"
+# The script's own folder, so a test run from a git worktree writes to that
+# worktree. The scheduled run calls it through the Python_Absentee junction,
+# which resolves to the same live repo as before.
+REPO_ROOT   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR    = os.path.join(REPO_ROOT, "data")
 
 # Per-cycle settings, keyed by the ELECTION_NAME that VA SBE puts in
@@ -39,6 +42,11 @@ ELECTION_CONFIG = {
         "election_day": "2026-11-03",
         "label":        "2026 November General",
         "cycle_start":  "2026-09-18",
+        # By Race tab. Baseline = final early vote of the closest past cycle
+        # (midterm, same CD lines); statewide_extra is shown statewide only
+        # because LTV2024_GEN has no CD column.
+        "race_baseline":        ("G22", "2022 General", "Historic.dbo.LTV2022_GEN"),
+        "race_statewide_extra": ("G24", "2024 General", "Historic.dbo.LTV2024_GEN"),
     },
     "2026 April 21 Special": {
         "election_day": "2026-04-21",
@@ -265,6 +273,110 @@ GROUP BY
 ORDER BY ReturnDate;
 """
 
+def build_race_query(election_name, baseline_table, extra_table):
+    return f"""
+-- Race / ethnicity of returned ballots by CD: this cycle to date, a past
+-- cycle's final early vote, and registered voters. Race is VAN's modeled
+-- CodedRaceName, every confidence level. Voters with no VAN match land in
+-- Race = 'X' and are left out of the shares on the page.
+WITH v AS (
+    SELECT StateFileID, CD,
+           CASE WHEN CodedRaceName LIKE 'White%'    THEN 'W'
+                WHEN CodedRaceName LIKE 'Black%'    THEN 'B'
+                WHEN CodedRaceName LIKE 'Hispanic%' THEN 'H'
+                WHEN CodedRaceName LIKE 'Asian%'    THEN 'A'
+                ELSE 'O' END AS Race
+    FROM van
+),
+dal_deduped AS (
+    SELECT IDENTIFICATION_NUMBER, CONG_CODE_VALUE, BALLOT_STATUS, BALLOT_RECEIPT_DATE,
+           ROW_NUMBER() OVER (
+               PARTITION BY IDENTIFICATION_NUMBER
+               ORDER BY
+                   CASE BALLOT_STATUS
+                       WHEN 'Marked'        THEN 1
+                       WHEN 'Pre-Processed' THEN 2
+                       WHEN 'On Machine'    THEN 3
+                       WHEN 'Unmarked'      THEN 4
+                       ELSE                      5
+                   END,
+                   BALLOT_RECEIPT_DATE DESC
+           ) AS rn
+    FROM Daily_Absentee_List
+    WHERE ELECTION_NAME = '{election_name}'
+      AND BALLOT_STATUS NOT IN ('Deleted', 'Not Issued')
+),
+u AS (
+    SELECT 'NOW' AS Cycle, dal.CONG_CODE_VALUE AS CD, v.Race
+    FROM dal_deduped dal
+    LEFT JOIN v ON v.StateFileID = dal.IDENTIFICATION_NUMBER
+    WHERE dal.rn = 1
+      AND dal.BALLOT_RECEIPT_DATE IS NOT NULL
+      AND dal.BALLOT_STATUS IN ('Marked', 'Pre-Processed', 'On Machine')
+    UNION ALL
+    SELECT 'BASE', l.CONG_CODE_VALUE, v.Race
+    FROM {baseline_table} l
+    LEFT JOIN v ON v.StateFileID = l.IDENTIFICATION_NUMBER
+    WHERE l.ABSENTEE LIKE 'True%'
+    UNION ALL
+    SELECT 'EXTRA', NULL, v.Race
+    FROM {extra_table} l
+    LEFT JOIN v ON v.StateFileID = l.IDENTIFICATION_NUMBER
+    WHERE l.ABSENTEE LIKE 'True%'
+    UNION ALL
+    SELECT 'REG', v.CD, v.Race FROM v
+)
+SELECT Cycle,
+       CASE WHEN TRY_CAST(CD AS int) >= 1
+            THEN RIGHT('0' + CAST(TRY_CAST(CD AS int) AS varchar(2)), 2) END AS CD,
+       ISNULL(Race, 'X') AS Race,
+       COUNT(*) AS Voters
+FROM u
+GROUP BY Cycle,
+         CASE WHEN TRY_CAST(CD AS int) >= 1
+              THEN RIGHT('0' + CAST(TRY_CAST(CD AS int) AS varchar(2)), 2) END,
+         ISNULL(Race, 'X');
+"""
+
+RACE_KEYS = {"W": "White", "B": "Black", "H": "Hispanic", "A": "API", "O": "Other", "X": "Unmatched"}
+
+def build_race(conn, cfg, election_name):
+    """data/race.json for the By Race tab.
+
+    cycles[key].districts[CD] and cycles[key].statewide hold voter counts per
+    race. Statewide sums every row, including ones with no valid CD, so it is
+    the true statewide figure rather than the sum of the 11 districts. The
+    statewide_extra cycle has no districts.
+    """
+    base_key,  base_label,  base_table  = cfg["race_baseline"]
+    extra_key, extra_label, extra_table = cfg["race_statewide_extra"]
+    df = pd.read_sql(build_race_query(election_name, base_table, extra_table), conn)
+    df["Race"] = df["Race"].map(RACE_KEYS)
+
+    names = {"NOW": "G26", "BASE": base_key, "EXTRA": extra_key, "REG": "REG"}
+    labels = {"G26": cfg["label"], base_key: base_label, extra_key: extra_label, "REG": "Registered"}
+    empty = {r: 0 for r in RACE_KEYS.values()}
+
+    cycles = {}
+    for raw, key in names.items():
+        part = df[df["Cycle"] == raw]
+        statewide = {**empty, **part.groupby("Race")["Voters"].sum().astype(int).to_dict()}
+        districts = {}
+        if raw != "EXTRA":
+            by_cd = part.dropna(subset=["CD"]).pivot_table(
+                index="CD", columns="Race", values="Voters", aggfunc="sum", fill_value=0)
+            for cd, row in by_cd.iterrows():
+                districts[cd] = {**empty, **{k: int(v) for k, v in row.items()}}
+        cycles[key] = {"label": labels[key], "statewide": statewide, "districts": districts}
+
+    return {
+        "current":        "G26",
+        "baseline":       base_key,
+        "statewide_extra": extra_key,
+        "targets":        TARGET_CDS,
+        "cycles":         cycles,
+    }
+
 NUM_COLS = [
     "TotalMatchedVoters",
     "DemVotedCount","RepVotedCount","UnknownVotedCount",
@@ -426,6 +538,20 @@ def main():
         "election_day":   cfg["election_day"],
         "cycle_start":    cycle_start,
     },                                                           os.path.join(DATA_DIR, "metadata.json"))
+
+    # By Race tab. Runs last and on its own connection so a failure here never
+    # costs the daily files above; the page hides the tab's data if it's missing.
+    if "race_baseline" in cfg:
+        print("Running race query ...")
+        try:
+            race_conn = connect()
+            try:
+                write_json(build_race(race_conn, cfg, election_name),
+                                                                 os.path.join(DATA_DIR, "race.json"))
+            finally:
+                race_conn.close()
+        except Exception as e:
+            print(f"  WARNING: race.json not updated: {e}")
 
     print("\nDone. Commit and push with GitHub Desktop to update the live dashboard.")
 
