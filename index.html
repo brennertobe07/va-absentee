@@ -1095,13 +1095,30 @@ function renderRace(main) {
   }
   const targets = data.targets || [];
   if (raceCmp === null) raceCmp = data.baseline;
-  if (raceSelected === null) raceSelected = targets[0] || 'VA';
+  if (raceSelected === null) raceSelected = targets[0] || Object.keys(data.cycles[data.current].districts).sort()[0];
   const base = data.cycles[data.baseline];
+  const legend = `<div class="race-legend">${RACES.map(x =>
+    `<span><i class="swatch" style="background:var(${x.v})"></i>${x.k}</span>`).join('')}</div>`;
+  // Cycle chart + callouts, used once for statewide and once for the clicked CD
+  const panels = id => `
+    <div class="race-two">
+      <div class="table-wrap">
+        <div class="table-header"><h3 id="${id}-cyc-title"></h3>${legend}</div>
+        <div class="cycles" id="${id}-cycles"></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><h3 id="${id}-call-title"></h3></div>
+        <div class="callouts" id="${id}-callouts"></div>
+      </div>
+    </div>`;
 
   main.innerHTML = `
     <div>
       <div class="section-banner">Returned Ballots by Race / Ethnicity <span class="race-sub" style="font-size:.8rem;color:var(--muted)">(modeled)</span></div>
+      <div class="section-title">Statewide</div>
+      <div class="stat-grid" id="race-sw-cards"></div>
     </div>
+    ${panels('race-sw')}
     <div class="table-wrap">
       <div class="table-header">
         <h3>By District</h3>
@@ -1119,19 +1136,7 @@ function renderRace(main) {
       <div class="table-scroll"><table id="race-table"></table></div>
       <div class="table-footer" id="race-footer"></div>
     </div>
-    <div class="race-two">
-      <div class="table-wrap">
-        <div class="table-header"><h3 id="race-cyc-title"></h3>
-          <div class="race-legend">${RACES.map(x =>
-            `<span><i class="swatch" style="background:var(${x.v})"></i>${x.k}</span>`).join('')}</div>
-        </div>
-        <div class="cycles" id="race-cycles"></div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-header"><h3>What stands out</h3></div>
-        <div class="callouts" id="race-callouts"></div>
-      </div>
-    </div>
+    ${panels('race-cd')}
     <div class="race-notes"><ul>
       <li>Race is modeled: VAN <code>CodedRaceName</code>, all confidence levels. API is the model's Asian group; Other covers Other, Native American and unscored voters. Voters with no VAN match are left out.</li>
       <li>${esc(data.cycles[data.current].label)} counts returned ballots (Marked, Pre-Processed, On Machine) through this morning's file. ${esc(base.label)} is the final early vote from the voter history file — not a same-day comparison.</li>
@@ -1150,9 +1155,12 @@ function renderRace(main) {
   });
   document.getElementById('race-cmp').style.display = raceMode === 'share' ? '' : 'none';
 
+  buildRaceCards();
+  buildRaceCycles('VA', 'race-sw');
+  buildRaceCallouts('VA', 'race-sw');
   buildRaceTable(main);
-  buildRaceCycles();
-  buildRaceCallouts();
+  buildRaceCycles(raceSelected, 'race-cd');
+  buildRaceCallouts(raceSelected, 'race-cd');
 }
 
 function buildRaceTable(main) {
@@ -1184,7 +1192,6 @@ function buildRaceTable(main) {
     const t = (data.targets || []).includes(cd);
     html += row(cd, cd, `clickable${t ? ' target-row' : ''}${cd === raceSelected ? ' sel' : ''}`);
   });
-  html += row('VA', 'Statewide', `clickable total-row${raceSelected === 'VA' ? ' sel' : ''}`);
   html += '</tbody>';
 
   const tbl = document.getElementById('race-table');
@@ -1199,19 +1206,35 @@ function buildRaceTable(main) {
     : `Returned ballots ÷ registered voters in that group. Click a row to compare cycles below.`;
 }
 
-function buildRaceCycles() {
+// Statewide: one card per group - share of returned ballots, ▲▼ vs the
+// baseline cycle, and turnout rate underneath.
+function buildRaceCards() {
   const data = DATA.race;
-  const isVA = raceSelected === 'VA';
-  document.getElementById('race-cyc-title').textContent =
-    `${isVA ? 'Statewide' : 'CD ' + raceSelected}: early-vote mix by cycle`;
+  const now  = raceRow(data.current, 'VA'), was = raceRow(data.baseline, 'VA');
+  const yr   = data.cycles[data.baseline].label.slice(0, 4);
+  document.getElementById('race-sw-cards').innerHTML = RACES.map(x => {
+    const s = raceShare(now, x.k), d = s - raceShare(was, x.k);
+    return `<div class="stat-card" style="border-top:3px solid var(${x.v})">
+      <div class="stat-label">${x.k}</div>
+      <div class="stat-value">${pctTxt(s)}</div>
+      <div class="stat-sub">${raceDelta(d)} vs ${yr} · turnout ${pctTxt(raceRate('VA', x.k))}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildRaceCycles(cd, id) {
+  const data = DATA.race;
+  const isVA = cd === 'VA';
+  document.getElementById(`${id}-cyc-title`).textContent =
+    `${isVA ? 'Statewide' : 'CD ' + cd}: early-vote mix by cycle`;
   const order = [
     ['REG', 'current file', 'reg'],
     [data.baseline, 'final', ''],
     ...(isVA ? [[data.statewide_extra, 'final · presidential', '']] : []),
     [data.current, 'to date', 'now'],
   ];
-  document.getElementById('race-cycles').innerHTML = order.map(([c, sub, cls]) => {
-    const r = raceRow(c, raceSelected);
+  document.getElementById(`${id}-cycles`).innerHTML = order.map(([c, sub, cls]) => {
+    const r = raceRow(c, cd);
     if (!r) return '';
     return `<div class="cyc-row ${cls}">
       <div class="cyc-label">${esc(data.cycles[c].label)}<small>${sub}</small></div>
@@ -1224,9 +1247,10 @@ function buildRaceCycles() {
   }).join('');
 }
 
-function buildRaceCallouts() {
+function buildRaceCallouts(sel, id) {
   const data  = DATA.race;
-  const sel   = raceSelected;
+  document.getElementById(`${id}-call-title`).textContent =
+    `What stands out — ${sel === 'VA' ? 'Statewide' : 'CD ' + sel}`;
   const where = sel === 'VA' ? 'Virginia' : `CD ${sel}`;
   const area  = sel === 'VA' ? 'statewide' : 'in the district';
   const now   = raceRow(data.current, sel), reg = raceRow('REG', sel), was = raceRow(data.baseline, sel);
@@ -1254,7 +1278,7 @@ function buildRaceCallouts() {
     (${pctTxt(raceShare(was, moved.x.k))} → ${pctTxt(raceShare(now, moved.x.k))}) — the biggest shift ${area}.
     This cycle isn't final yet, so it will move as late ballots come in.</div>`);
 
-  document.getElementById('race-callouts').innerHTML = items.join('');
+  document.getElementById(`${id}-callouts`).innerHTML = items.join('');
 }
 
 // ── KEY / DEFINITIONS ─────────────────────────────────────────────────────
