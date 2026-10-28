@@ -1081,6 +1081,17 @@ const raceRate  = (cd, k) => {
 };
 const pctTxt = v => v === null ? '—' : v.toFixed(1) + '%';
 
+// Main comparison: last cycle at the same point when race.json has it,
+// otherwise the baseline cycle's final.
+const raceRef = () => DATA.race.sameday || DATA.race.baseline;
+const raceThrough = c => {
+  const t = DATA.race.cycles[c].through;
+  return t ? new Date(t + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+};
+// Short label for a comparison cycle: "2025 same day" or "2022 final"
+const raceCmpName = c => DATA.race.cycles[c].label.slice(0, 4)
+  + (c === DATA.race.sameday ? ' same day' : ' final');
+
 function raceDelta(d) {
   if (d === null || isNaN(d)) return '';
   if (Math.abs(d) < 0.5) return `<span class="delta flat">·${Math.abs(d).toFixed(1)}</span>`;
@@ -1094,7 +1105,8 @@ function renderRace(main) {
     return;
   }
   const targets = data.targets || [];
-  if (raceCmp === null) raceCmp = data.baseline;
+  if (raceCmp === null) raceCmp = raceRef();
+  const same = data.sameday ? data.cycles[data.sameday] : null;
   if (raceSelected === null) raceSelected = targets[0] || Object.keys(data.cycles[data.current].districts).sort()[0];
   const base = data.cycles[data.baseline];
   const legend = `<div class="race-legend">${RACES.map(x =>
@@ -1128,7 +1140,8 @@ function renderRace(main) {
             <button data-m="rate">Turnout rate</button>
           </div>
           <div class="seg" id="race-cmp">
-            <button data-c="${data.baseline}">vs ${base.label.slice(0, 4)}</button>
+            ${same ? `<button data-c="${data.sameday}">vs ${raceCmpName(data.sameday)}</button>` : ''}
+            <button data-c="${data.baseline}">vs ${raceCmpName(data.baseline)}</button>
             <button data-c="REG">vs registered</button>
           </div>
         </div>
@@ -1139,7 +1152,7 @@ function renderRace(main) {
     ${panels('race-cd')}
     <div class="race-notes"><ul>
       <li>Race is modeled: VAN <code>CodedRaceName</code>, all confidence levels. API is the model's Asian group; Other covers Other, Native American and unscored voters. Voters with no VAN match are left out.</li>
-      <li>${esc(data.cycles[data.current].label)} counts returned ballots (Marked, Pre-Processed, On Machine) through this morning's file. ${esc(base.label)} is the final early vote from the voter history file — not a same-day comparison.</li>
+      <li>${esc(data.cycles[data.current].label)} counts returned ballots (Marked, Pre-Processed, On Machine) through this morning's file.${same ? ` ${esc(same.label)} same day counts the same statuses from that cycle's SBE absentee file, received through ${raceThrough(data.sameday)} — ${same.days_out} days before its Election Day, the same point as today.` : ''} ${esc(base.label)} is the final early vote from the voter history file — not a same-day comparison.</li>
       <li>${esc(base.label)} is a midterm on the same CD lines. Past voters get their race from today's VAN file, so voters removed since then aren't counted.</li>
       <li>Statewide also shows the ${esc(data.cycles[data.statewide_extra].label)} (presidential); it isn't shown by district because that file has no CD.</li>
       <li>Turnout rate = returned ballots ÷ registered voters of that group in the district.</li>
@@ -1199,25 +1212,26 @@ function buildRaceTable(main) {
   tbl.querySelectorAll('tr[data-cd]').forEach(tr =>
     tr.addEventListener('click', () => { raceSelected = tr.dataset.cd; renderRace(main); }));
 
-  const cmpLabel = raceCmp === 'REG' ? 'share of registered voters'
-                                     : `${data.cycles[raceCmp].label} final early-vote share`;
+  const cmpLabel = raceCmp === 'REG'          ? 'share of registered voters'
+                 : raceCmp === data.sameday   ? `${data.cycles[raceCmp].label} share at the same point (through ${raceThrough(raceCmp)})`
+                 :                              `${data.cycles[raceCmp].label} final early-vote share`;
   document.getElementById('race-footer').textContent = raceMode === 'share'
     ? `Share of returned ballots. ▲▼ = points vs ${cmpLabel}. Click a row to compare cycles below.`
     : `Returned ballots ÷ registered voters in that group. Click a row to compare cycles below.`;
 }
 
 // Statewide: one card per group - share of returned ballots, ▲▼ vs the
-// baseline cycle, and turnout rate underneath.
+// same-day cycle (or the baseline final), and turnout rate underneath.
 function buildRaceCards() {
   const data = DATA.race;
-  const now  = raceRow(data.current, 'VA'), was = raceRow(data.baseline, 'VA');
-  const yr   = data.cycles[data.baseline].label.slice(0, 4);
+  const ref  = raceRef();
+  const now  = raceRow(data.current, 'VA'), was = raceRow(ref, 'VA');
   document.getElementById('race-sw-cards').innerHTML = RACES.map(x => {
     const s = raceShare(now, x.k), d = s - raceShare(was, x.k);
     return `<div class="stat-card" style="border-top:3px solid var(${x.v})">
       <div class="stat-label">${x.k}</div>
       <div class="stat-value">${pctTxt(s)}</div>
-      <div class="stat-sub">${raceDelta(d)} vs ${yr} · turnout ${pctTxt(raceRate('VA', x.k))}</div>
+      <div class="stat-sub">${raceDelta(d)} vs ${raceCmpName(ref)} · turnout ${pctTxt(raceRate('VA', x.k))}</div>
     </div>`;
   }).join('');
 }
@@ -1231,6 +1245,7 @@ function buildRaceCycles(cd, id) {
     ['REG', 'current file', 'reg'],
     [data.baseline, 'final', ''],
     ...(isVA ? [[data.statewide_extra, 'final · presidential', '']] : []),
+    ...(data.sameday ? [[data.sameday, `same day · thru ${raceThrough(data.sameday)}`, '']] : []),
     [data.current, 'to date', 'now'],
   ];
   document.getElementById(`${id}-cycles`).innerHTML = order.map(([c, sub, cls]) => {
@@ -1253,9 +1268,25 @@ function buildRaceCallouts(sel, id) {
     `What stands out — ${sel === 'VA' ? 'Statewide' : 'CD ' + sel}`;
   const where = sel === 'VA' ? 'Virginia' : `CD ${sel}`;
   const area  = sel === 'VA' ? 'statewide' : 'in the district';
-  const now   = raceRow(data.current, sel), reg = raceRow('REG', sel), was = raceRow(data.baseline, sel);
+  const ref   = raceRef();
+  const now   = raceRow(data.current, sel), reg = raceRow('REG', sel), was = raceRow(ref, sel);
   const four  = RACES.slice(0, 4);
   const items = [];
+
+  // Growth in ballots by group vs last cycle at the same point
+  if (data.sameday && was) {
+    const grow = (a, b) => b ? 100 * (a / b - 1) : null;
+    const g = four.map(x => ({ x, p: grow(now[x.k], was[x.k]) }));
+    const top = g.filter(o => o.p !== null).sort((a, b) => b.p - a.p)[0];
+    const sgn = p => p === null ? '—' : (p >= 0 ? '+' : '') + p.toFixed(1) + '%';
+    // Total counts unmatched voters too: far more 2025 voters have left VAN since
+    const all = r => r.n + (r.Unmatched || 0);
+    items.push(`<div class="callout" style="border-color:var(${top.x.v})">
+      <div class="big">${sgn(grow(all(now), all(was)))} ballots</div>
+      vs ${esc(data.cycles[ref].label)} at the same point (through ${raceThrough(ref)}):
+      ${g.map(o => `${o.x.k} <b>${sgn(o.p)}</b>`).join(' · ')}.
+      ${top.x.k} ballots grew the most ${area}.</div>`);
+  }
 
   const under = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(reg, x.k) }))
                     .sort((a, b) => a.d - b.d)[0];
@@ -1270,12 +1301,15 @@ function buildRaceCallouts(sel, id) {
     Share of each group's registered voters who've returned a ballot:
     ${four.map(x => `${x.k} <b>${pctTxt(raceRate(sel, x.k))}</b>`).join(' · ')}</div>`);
 
-  // The group whose share moved most vs the baseline cycle
+  // The group whose share moved most vs the comparison cycle
   const moved = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(was, x.k) }))
                     .sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
+  const vsTxt = ref === data.sameday
+    ? `${esc(data.cycles[ref].label)} at the same point`
+    : `the ${esc(data.cycles[ref].label)} final`;
   items.push(`<div class="callout" style="border-color:var(${moved.x.v})">
     <div class="big">${moved.d >= 0 ? '+' : ''}${moved.d.toFixed(1)} pts</div>
-    ${moved.x.k} share of the early vote vs the ${esc(data.cycles[data.baseline].label)} final
+    ${moved.x.k} share of the early vote vs ${vsTxt}
     (${pctTxt(raceShare(was, moved.x.k))} → ${pctTxt(raceShare(now, moved.x.k))}) — the biggest shift ${area}.
     This cycle isn't final yet, so it will move as late ballots come in.</div>`);
 
@@ -1317,6 +1351,7 @@ function renderKey(main) {
       ['Race', 'Modeled, not self-reported: VAN <code>CodedRaceName</code>, every confidence level. Virginia does not record race on the voter file. API is the model\'s Asian group; Other covers Other, Native American and unscored voters.'],
       ['Share of ballots', 'Each group\'s share of returned ballots matched to VAN. Voters with no VAN match are left out, so the five groups sum to 100.'],
       ['Turnout rate', 'Returned ballots ÷ registered voters of that group in the district (current VAN file).'],
+      ['2025 same day', 'Returned ballots (Marked, Pre-Processed, On Machine) from the final 2025 General SBE absentee file, received by the same number of days before Election Day as this morning\'s file. This is the default ▲▼ comparison. 2025 was an off-year (governor) election.'],
       ['2022 baseline', 'Final early vote from the 2022 General voter history file (same CD lines, a midterm). It is a final total, not a same-day comparison. 2022 voters get today\'s VAN race, so voters removed since then aren\'t counted.'],
       ['2024 (statewide only)', 'Final early vote from the 2024 General. Shown statewide only — that history file has no CD column.'],
     ])}

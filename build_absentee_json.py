@@ -15,7 +15,7 @@ import pyodbc
 import pandas as pd
 import json
 import os
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 # ── CONFIG ───────────────────────────────────────────────────────────────────
 SERVER      = r"INSTANCE-1"
@@ -47,6 +47,10 @@ ELECTION_CONFIG = {
         # because LTV2024_GEN has no CD column.
         "race_baseline":        ("G22", "2022 General", "Historic.dbo.LTV2022_GEN"),
         "race_statewide_extra": ("G24", "2024 General", "Historic.dbo.LTV2024_GEN"),
+        # Same-day pace: last year's final SBE absentee file, cut at the same
+        # number of days before its election day as this morning's file.
+        # (key, label, table, that cycle's election day)
+        "race_sameday": ("G25", "2025 General", "Absentee.dbo.[2025_NOV_ABSENTEE]", "2025-11-04"),
     },
     "2026 April 21 Special": {
         "election_day": "2026-04-21",
@@ -273,10 +277,11 @@ GROUP BY
 ORDER BY ReturnDate;
 """
 
-def build_race_query(election_name, baseline_table, extra_table):
+def build_race_query(election_name, baseline_table, extra_table, sameday_table, sameday_cutoff):
     return f"""
 -- Race / ethnicity of returned ballots by CD: this cycle to date, a past
--- cycle's final early vote, and registered voters. Race is VAN's modeled
+-- cycle's final early vote, last cycle at the same point (returned through
+-- {sameday_cutoff}), and registered voters. Race is VAN's modeled
 -- CodedRaceName, every confidence level. Voters with no VAN match land in
 -- Race = 'X' and are left out of the shares on the page.
 WITH v AS (
@@ -306,6 +311,23 @@ dal_deduped AS (
     WHERE ELECTION_NAME = '{election_name}'
       AND BALLOT_STATUS NOT IN ('Deleted', 'Not Issued')
 ),
+same_deduped AS (
+    SELECT IDENTIFICATION_NUMBER, CONG_CODE_VALUE, BALLOT_STATUS, BALLOT_RECEIPT_DATE,
+           ROW_NUMBER() OVER (
+               PARTITION BY IDENTIFICATION_NUMBER
+               ORDER BY
+                   CASE BALLOT_STATUS
+                       WHEN 'Marked'        THEN 1
+                       WHEN 'Pre-Processed' THEN 2
+                       WHEN 'On Machine'    THEN 3
+                       WHEN 'Unmarked'      THEN 4
+                       ELSE                      5
+                   END,
+                   BALLOT_RECEIPT_DATE DESC
+           ) AS rn
+    FROM {sameday_table}
+    WHERE BALLOT_STATUS NOT IN ('Deleted', 'Not Issued')
+),
 u AS (
     SELECT 'NOW' AS Cycle, dal.CONG_CODE_VALUE AS CD, v.Race
     FROM dal_deduped dal
@@ -323,6 +345,14 @@ u AS (
     FROM {extra_table} l
     LEFT JOIN v ON v.StateFileID = l.IDENTIFICATION_NUMBER
     WHERE l.ABSENTEE LIKE 'True%'
+    UNION ALL
+    SELECT 'SAME', s.CONG_CODE_VALUE, v.Race
+    FROM same_deduped s
+    LEFT JOIN v ON v.StateFileID = s.IDENTIFICATION_NUMBER
+    WHERE s.rn = 1
+      AND s.BALLOT_RECEIPT_DATE IS NOT NULL
+      AND s.BALLOT_STATUS IN ('Marked', 'Pre-Processed', 'On Machine')
+      AND CAST(s.BALLOT_RECEIPT_DATE AS DATE) <= '{sameday_cutoff}'
     UNION ALL
     SELECT 'REG', v.CD, v.Race FROM v
 )
@@ -347,14 +377,24 @@ def build_race(conn, cfg, election_name):
     race. Statewide sums every row, including ones with no valid CD, so it is
     the true statewide figure rather than the sum of the 11 districts. The
     statewide_extra cycle has no districts.
+
+    The sameday cycle is cut at the same days-before-election-day as this
+    morning's file, which holds ballots received through yesterday.
     """
     base_key,  base_label,  base_table  = cfg["race_baseline"]
     extra_key, extra_label, extra_table = cfg["race_statewide_extra"]
-    df = pd.read_sql(build_race_query(election_name, base_table, extra_table), conn)
+    same_key,  same_label,  same_table, same_eday = cfg["race_sameday"]
+
+    days_out = (date.fromisoformat(cfg["election_day"]) - date.today()).days + 1
+    same_cutoff = (date.fromisoformat(same_eday) - timedelta(days=days_out)).isoformat()
+
+    df = pd.read_sql(build_race_query(election_name, base_table, extra_table,
+                                      same_table, same_cutoff), conn)
     df["Race"] = df["Race"].map(RACE_KEYS)
 
-    names = {"NOW": "G26", "BASE": base_key, "EXTRA": extra_key, "REG": "REG"}
-    labels = {"G26": cfg["label"], base_key: base_label, extra_key: extra_label, "REG": "Registered"}
+    names = {"NOW": "G26", "BASE": base_key, "EXTRA": extra_key, "SAME": same_key, "REG": "REG"}
+    labels = {"G26": cfg["label"], base_key: base_label, extra_key: extra_label,
+              same_key: same_label, "REG": "Registered"}
     empty = {r: 0 for r in RACE_KEYS.values()}
 
     cycles = {}
@@ -368,11 +408,14 @@ def build_race(conn, cfg, election_name):
             for cd, row in by_cd.iterrows():
                 districts[cd] = {**empty, **{k: int(v) for k, v in row.items()}}
         cycles[key] = {"label": labels[key], "statewide": statewide, "districts": districts}
+    cycles[same_key]["through"] = same_cutoff
+    cycles[same_key]["days_out"] = days_out
 
     return {
         "current":        "G26",
         "baseline":       base_key,
         "statewide_extra": extra_key,
+        "sameday":        same_key,
         "targets":        TARGET_CDS,
         "cycles":         cycles,
     }
