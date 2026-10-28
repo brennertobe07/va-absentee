@@ -1272,46 +1272,54 @@ function buildRaceCallouts(sel, id) {
   const now   = raceRow(data.current, sel), reg = raceRow('REG', sel), was = raceRow(ref, sel);
   const four  = RACES.slice(0, 4);
   const items = [];
+  const vsTxt = ref === data.sameday
+    ? `${esc(data.cycles[ref].label)} at the same point`
+    : `the ${esc(data.cycles[ref].label)} final`;
 
-  // Growth in ballots by group vs last cycle at the same point
-  if (data.sameday && was) {
-    const grow = (a, b) => b ? 100 * (a / b - 1) : null;
-    const g = four.map(x => ({ x, p: grow(now[x.k], was[x.k]) }));
-    const top = g.filter(o => o.p !== null).sort((a, b) => b.p - a.p)[0];
-    const sgn = p => p === null ? '—' : (p >= 0 ? '+' : '') + p.toFixed(1) + '%';
-    // Total counts unmatched voters too: far more 2025 voters have left VAN since
-    const all = r => r.n + (r.Unmatched || 0);
-    items.push(`<div class="callout" style="border-color:var(${top.x.v})">
-      <div class="big">${sgn(grow(all(now), all(was)))} ballots</div>
-      vs ${esc(data.cycles[ref].label)} at the same point (through ${raceThrough(ref)}):
-      ${g.map(o => `${o.x.k} <b>${sgn(o.p)}</b>`).join(' · ')}.
-      ${top.x.k} ballots grew the most ${area}.</div>`);
+  // 1. Biggest share GAIN vs the comparison cycle. Losses still show in the
+  //    cards and table; leading with the largest absolute move put a drop on top.
+  if (was) {
+    const gain = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(was, x.k) }))
+                     .sort((a, b) => b.d - a.d)[0];
+    items.push(`<div class="callout" style="border-color:var(${gain.x.v})">
+      <div class="big">${gain.d >= 0 ? '+' : ''}${gain.d.toFixed(1)} pts ${gain.x.k} share</div>
+      Biggest gain ${area} vs ${vsTxt}:
+      ${pctTxt(raceShare(was, gain.x.k))} → ${pctTxt(raceShare(now, gain.x.k))} of the early vote.
+      This cycle isn't final yet, so it will move as late ballots come in.</div>`);
   }
 
-  const under = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(reg, x.k) }))
-                    .sort((a, b) => a.d - b.d)[0];
-  items.push(`<div class="callout" style="border-color:var(${under.x.v})">
-    <div class="big">${under.d.toFixed(1)} pts</div>
-    ${under.x.k} voters are ${pctTxt(raceShare(reg, under.x.k))} of ${where}'s registered voters but
-    ${pctTxt(raceShare(now, under.x.k))} of ballots returned so far — the largest gap ${area}.
-    Only part of the electorate has voted so far, so this gap will shift as more ballots come in.</div>`);
+  // 2. Ballot growth by group vs last cycle at the same point: % and ballots
+  //    added, unranked, since % alone favours the smallest groups.
+  if (data.sameday && was) {
+    const grow = (a, b) => b ? 100 * (a / b - 1) : null;
+    const sgn  = p => p === null ? '—' : (p >= 0 ? '+' : '') + p.toFixed(1) + '%';
+    const add  = n => (n >= 0 ? '+' : '−') + (Math.abs(n) >= 1000 ? (Math.abs(n) / 1000).toFixed(1) + 'k' : Math.abs(n));
+    // Total counts unmatched voters too: far more 2025 voters have left VAN since
+    const all  = r => r.n + (r.Unmatched || 0);
+    items.push(`<div class="callout">
+      <div class="big">${sgn(grow(all(now), all(was)))} ballots</div>
+      vs ${esc(data.cycles[ref].label)} at the same point (through ${raceThrough(ref)}):
+      ${four.map(x => `${x.k} <b>${sgn(grow(now[x.k], was[x.k]))}</b> (${add(now[x.k] - was[x.k])})`).join(' · ')}</div>`);
+  }
+
+  // 3. Largest gap vs registered, and whether it has narrowed since the
+  //    comparison cycle. Early votes always run under registration for some
+  //    groups, so the trend is the story, not the gap itself.
+  const gapOf = r => four.map(x => ({ x, d: raceShare(r, x.k) - raceShare(reg, x.k) }));
+  const under = gapOf(now).sort((a, b) => a.d - b.d)[0];
+  const wasD  = was ? raceShare(was, under.x.k) - raceShare(reg, under.x.k) : null;
+  const trend = wasD === null ? '' : under.d > wasD ? 'Gap closing: ' : under.d < wasD ? 'Gap widening: ' : '';
+  items.push(`<div class="callout">
+    <div class="big">${trend}${under.x.k} ${Math.abs(under.d).toFixed(1)} pts under registration</div>
+    ${under.x.k} voters are ${pctTxt(raceShare(reg, under.x.k))} of ${where}'s registered voters and
+    ${pctTxt(raceShare(now, under.x.k))} of ballots returned so far${wasD === null ? '' :
+      ` — ${Math.abs(wasD).toFixed(1)} pts under vs ${vsTxt}`}.
+    Early votes usually run under registration; the change is what matters.</div>`);
 
   items.push(`<div class="callout">
     <div class="big">Turnout rate</div>
     Share of each group's registered voters who've returned a ballot:
     ${four.map(x => `${x.k} <b>${pctTxt(raceRate(sel, x.k))}</b>`).join(' · ')}</div>`);
-
-  // The group whose share moved most vs the comparison cycle
-  const moved = four.map(x => ({ x, d: raceShare(now, x.k) - raceShare(was, x.k) }))
-                    .sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
-  const vsTxt = ref === data.sameday
-    ? `${esc(data.cycles[ref].label)} at the same point`
-    : `the ${esc(data.cycles[ref].label)} final`;
-  items.push(`<div class="callout" style="border-color:var(${moved.x.v})">
-    <div class="big">${moved.d >= 0 ? '+' : ''}${moved.d.toFixed(1)} pts</div>
-    ${moved.x.k} share of the early vote vs ${vsTxt}
-    (${pctTxt(raceShare(was, moved.x.k))} → ${pctTxt(raceShare(now, moved.x.k))}) — the biggest shift ${area}.
-    This cycle isn't final yet, so it will move as late ballots come in.</div>`);
 
   document.getElementById(`${id}-callouts`).innerHTML = items.join('');
 }
