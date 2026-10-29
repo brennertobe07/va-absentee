@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-10-28 09:13",
+  "checked_at": "2026-10-29 07:03",
   "ok": true,
   "steps": [
     {
       "name": "Pipeline",
-      "time": "09:09",
+      "time": "05:55",
       "ok": true,
-      "detail": "1,468,369 ballots loaded"
+      "detail": "1,533,381 ballots loaded"
     },
     {
       "name": "DNC drop",
@@ -16,7 +16,7 @@
     },
     {
       "name": "Dashboards",
-      "time": "09:13",
+      "time": "07:03",
       "ok": true,
       "detail": "Exported"
     }
