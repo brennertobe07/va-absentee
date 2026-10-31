@@ -1828,6 +1828,19 @@
           "in_person_rep": 456333,
           "mail_dem": 220091,
           "mail_rep": 80188
+        },
+        {
+          "days_before": 3,
+          "total_voted": 1512346,
+          "in_person": 1200212,
+          "mail": 312134,
+          "dem_voted": 925473,
+          "rep_voted": 578155,
+          "unknown_voted": 8718,
+          "in_person_dem": 697758,
+          "in_person_rep": 495153,
+          "mail_dem": 227715,
+          "mail_rep": 83002
         }
       ]
     }
@@ -1835,24 +1848,24 @@
   "current_election": "26Gen",
   "summary": {
     "current_election": "26Gen",
-    "current_day": 4,
-    "current_voted": 1408901,
+    "current_day": 3,
+    "current_voted": 1512346,
     "prior_comparisons": [
       {
         "election": "22G",
         "label": "2022 General",
-        "days_before": 4,
-        "prior_voted": 789978,
-        "difference": 618923
+        "days_before": 3,
+        "prior_voted": 861704,
+        "difference": 650642
       },
       {
         "election": "25G",
         "label": "2025 General",
-        "days_before": 4,
-        "prior_voted": 1216949,
-        "difference": 191952
+        "days_before": 3,
+        "prior_voted": 1307660,
+        "difference": 204686
       }
     ]
   },
-  "generated_at": "2026-10-30 07:01"
+  "generated_at": "2026-10-31 07:02"
 }
