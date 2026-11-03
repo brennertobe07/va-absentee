@@ -12,101 +12,101 @@
     "G26": {
       "label": "2026 November General",
       "statewide": {
-        "White": 1242728,
-        "Black": 218274,
-        "Hispanic": 58783,
-        "API": 82682,
-        "Other": 23602,
-        "Unmatched": 4378
+        "White": 1252341,
+        "Black": 219892,
+        "Hispanic": 59553,
+        "API": 84163,
+        "Other": 23945,
+        "Unmatched": 4540
       },
       "districts": {
         "01": {
-          "White": 177013,
-          "Black": 14128,
-          "Hispanic": 3242,
-          "API": 5534,
-          "Other": 1999,
-          "Unmatched": 436
+          "White": 177883,
+          "Black": 14225,
+          "Hispanic": 3269,
+          "API": 5600,
+          "Other": 2018,
+          "Unmatched": 454
         },
         "02": {
-          "White": 116564,
-          "Black": 28212,
-          "Hispanic": 4032,
-          "API": 4320,
-          "Other": 1813,
-          "Unmatched": 448
+          "White": 117291,
+          "Black": 28443,
+          "Hispanic": 4079,
+          "API": 4370,
+          "Other": 1830,
+          "Unmatched": 464
         },
         "03": {
-          "White": 50810,
-          "Black": 43888,
-          "Hispanic": 2153,
-          "API": 1098,
-          "Other": 1039,
-          "Unmatched": 291
+          "White": 51330,
+          "Black": 44218,
+          "Hispanic": 2180,
+          "API": 1114,
+          "Other": 1052,
+          "Unmatched": 297
         },
         "04": {
-          "White": 79869,
-          "Black": 53146,
-          "Hispanic": 2921,
-          "API": 1669,
-          "Other": 1333,
-          "Unmatched": 359
+          "White": 80145,
+          "Black": 53359,
+          "Hispanic": 2937,
+          "API": 1684,
+          "Other": 1340,
+          "Unmatched": 364
         },
         "05": {
-          "White": 138187,
-          "Black": 17390,
-          "Hispanic": 1603,
-          "API": 1641,
-          "Other": 1204,
-          "Unmatched": 370
+          "White": 138779,
+          "Black": 17510,
+          "Hispanic": 1622,
+          "API": 1651,
+          "Other": 1214,
+          "Unmatched": 385
         },
         "06": {
-          "White": 127505,
-          "Black": 4898,
-          "Hispanic": 2567,
-          "API": 1091,
-          "Other": 1079,
-          "Unmatched": 354
+          "White": 128581,
+          "Black": 4917,
+          "Hispanic": 2603,
+          "API": 1102,
+          "Other": 1098,
+          "Unmatched": 367
         },
         "07": {
-          "White": 97486,
-          "Black": 27455,
-          "Hispanic": 10085,
-          "API": 5346,
-          "Other": 2608,
-          "Unmatched": 370
+          "White": 98401,
+          "Black": 27745,
+          "Hispanic": 10239,
+          "API": 5455,
+          "Other": 2645,
+          "Unmatched": 384
         },
         "08": {
-          "White": 114273,
-          "Black": 10678,
-          "Hispanic": 11515,
-          "API": 12986,
-          "Other": 3975,
-          "Unmatched": 691
+          "White": 115623,
+          "Black": 10804,
+          "Hispanic": 11680,
+          "API": 13232,
+          "Other": 4043,
+          "Unmatched": 711
         },
         "09": {
-          "White": 113029,
-          "Black": 3162,
-          "Hispanic": 704,
-          "API": 781,
-          "Other": 671,
-          "Unmatched": 275
+          "White": 113565,
+          "Black": 3174,
+          "Hispanic": 712,
+          "API": 798,
+          "Other": 674,
+          "Unmatched": 286
         },
         "10": {
-          "White": 116473,
-          "Black": 7984,
-          "Hispanic": 9658,
-          "API": 19829,
-          "Other": 3448,
-          "Unmatched": 396
+          "White": 117713,
+          "Black": 8058,
+          "Hispanic": 9768,
+          "API": 20183,
+          "Other": 3515,
+          "Unmatched": 422
         },
         "11": {
-          "White": 111518,
-          "Black": 7333,
-          "Hispanic": 10303,
-          "API": 28387,
-          "Other": 4433,
-          "Unmatched": 388
+          "White": 113029,
+          "Black": 7439,
+          "Hispanic": 10464,
+          "API": 28974,
+          "Other": 4516,
+          "Unmatched": 406
         }
       }
     },
@@ -226,105 +226,105 @@
     "G25": {
       "label": "2025 General",
       "statewide": {
-        "White": 1126684,
-        "Black": 173633,
-        "Hispanic": 43638,
-        "API": 63239,
-        "Other": 13702,
-        "Unmatched": 17650
+        "White": 1135131,
+        "Black": 175314,
+        "Hispanic": 44145,
+        "API": 64127,
+        "Other": 13885,
+        "Unmatched": 17945
       },
       "districts": {
         "01": {
-          "White": 162352,
-          "Black": 11252,
-          "Hispanic": 2580,
-          "API": 4356,
-          "Other": 1120,
-          "Unmatched": 2272
+          "White": 163303,
+          "Black": 11335,
+          "Hispanic": 2604,
+          "API": 4422,
+          "Other": 1133,
+          "Unmatched": 2299
         },
         "02": {
-          "White": 100195,
-          "Black": 20848,
-          "Hispanic": 2915,
-          "API": 3042,
-          "Other": 1018,
-          "Unmatched": 1558
+          "White": 101306,
+          "Black": 21055,
+          "Hispanic": 2963,
+          "API": 3109,
+          "Other": 1032,
+          "Unmatched": 1591
         },
         "03": {
-          "White": 46228,
-          "Black": 35087,
-          "Hispanic": 1681,
-          "API": 985,
-          "Other": 658,
-          "Unmatched": 1272
+          "White": 46852,
+          "Black": 35625,
+          "Hispanic": 1709,
+          "API": 1016,
+          "Other": 672,
+          "Unmatched": 1311
         },
         "04": {
-          "White": 77941,
-          "Black": 46858,
-          "Hispanic": 2458,
-          "API": 1452,
-          "Other": 766,
-          "Unmatched": 1599
+          "White": 78319,
+          "Black": 47152,
+          "Hispanic": 2479,
+          "API": 1466,
+          "Other": 770,
+          "Unmatched": 1617
         },
         "05": {
-          "White": 121443,
-          "Black": 12991,
-          "Hispanic": 1131,
-          "API": 1196,
-          "Other": 537,
-          "Unmatched": 1868
+          "White": 122370,
+          "Black": 13107,
+          "Hispanic": 1145,
+          "API": 1221,
+          "Other": 547,
+          "Unmatched": 1902
         },
         "06": {
-          "White": 115422,
-          "Black": 4092,
-          "Hispanic": 1804,
-          "API": 825,
-          "Other": 501,
-          "Unmatched": 1783
+          "White": 115964,
+          "Black": 4107,
+          "Hispanic": 1821,
+          "API": 837,
+          "Other": 506,
+          "Unmatched": 1806
         },
         "07": {
-          "White": 90270,
-          "Black": 20427,
-          "Hispanic": 6991,
-          "API": 3604,
-          "Other": 1573,
-          "Unmatched": 1332
+          "White": 91052,
+          "Black": 20655,
+          "Hispanic": 7109,
+          "API": 3677,
+          "Other": 1598,
+          "Unmatched": 1361
         },
         "08": {
-          "White": 102241,
-          "Black": 7956,
-          "Hispanic": 8675,
-          "API": 10631,
-          "Other": 2378,
-          "Unmatched": 1474
+          "White": 103094,
+          "Black": 8018,
+          "Hispanic": 8755,
+          "API": 10742,
+          "Other": 2407,
+          "Unmatched": 1494
         },
         "09": {
-          "White": 104582,
-          "Black": 2545,
-          "Hispanic": 566,
-          "API": 685,
-          "Other": 283,
-          "Unmatched": 1653
+          "White": 105129,
+          "Black": 2568,
+          "Hispanic": 570,
+          "API": 697,
+          "Other": 286,
+          "Unmatched": 1679
         },
         "10": {
-          "White": 107806,
-          "Black": 6156,
-          "Hispanic": 7138,
-          "API": 14346,
-          "Other": 2119,
-          "Unmatched": 1513
+          "White": 108874,
+          "Black": 6237,
+          "Hispanic": 7231,
+          "API": 14589,
+          "Other": 2159,
+          "Unmatched": 1543
         },
         "11": {
-          "White": 98204,
-          "Black": 5421,
-          "Hispanic": 7699,
-          "API": 22117,
-          "Other": 2749,
-          "Unmatched": 1326
+          "White": 98868,
+          "Black": 5455,
+          "Hispanic": 7759,
+          "API": 22351,
+          "Other": 2775,
+          "Unmatched": 1342
         }
       },
-      "through": "2025-11-02",
-      "days_out": 2
+      "through": "2025-11-03",
+      "days_out": 1
     },
     "REG": {
       "label": "Registered",
