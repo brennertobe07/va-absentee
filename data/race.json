@@ -14,10 +14,10 @@
       "statewide": {
         "White": 1274516,
         "Black": 224029,
-        "Hispanic": 61349,
+        "Hispanic": 61348,
         "API": 87685,
         "Other": 24841,
-        "Unmatched": 4972
+        "Unmatched": 4971
       },
       "districts": {
         "01": {
@@ -30,7 +30,7 @@
         },
         "02": {
           "White": 119483,
-          "Black": 29003,
+          "Black": 29002,
           "Hispanic": 4190,
           "API": 4535,
           "Other": 1893,
@@ -38,7 +38,7 @@
         },
         "03": {
           "White": 52701,
-          "Black": 45153,
+          "Black": 45155,
           "Hispanic": 2267,
           "API": 1168,
           "Other": 1110,
@@ -64,7 +64,7 @@
           "White": 129924,
           "Black": 4972,
           "Hispanic": 2670,
-          "API": 1131,
+          "API": 1132,
           "Other": 1116,
           "Unmatched": 388
         },
@@ -72,14 +72,14 @@
           "White": 100001,
           "Black": 28238,
           "Hispanic": 10541,
-          "API": 5632,
+          "API": 5631,
           "Other": 2740,
           "Unmatched": 416
         },
         "08": {
           "White": 119285,
-          "Black": 11136,
-          "Hispanic": 12099,
+          "Black": 11135,
+          "Hispanic": 12098,
           "API": 13872,
           "Other": 4234,
           "Unmatched": 781
@@ -98,7 +98,7 @@
           "Hispanic": 10017,
           "API": 20923,
           "Other": 3628,
-          "Unmatched": 477
+          "Unmatched": 476
         },
         "11": {
           "White": 116273,
@@ -323,8 +323,8 @@
           "Unmatched": 1406
         }
       },
-      "through": "2025-11-07",
-      "days_out": -3
+      "through": "2025-11-08",
+      "days_out": -4
     },
     "REG": {
       "label": "Registered",

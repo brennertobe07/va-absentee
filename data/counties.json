@@ -541,7 +541,7 @@
   },
   {
     "CountyName": "Culpeper",
-    "TotalMatchedVoters": 10341,
+    "TotalMatchedVoters": 10342,
     "DemVotedCount": 4440,
     "RepVotedCount": 5350,
     "UnknownVotedCount": 69,
@@ -668,19 +668,19 @@
   {
     "CountyName": "Fairfax",
     "TotalMatchedVoters": 253471,
-    "DemVotedCount": 186650,
+    "DemVotedCount": 186649,
     "RepVotedCount": 49254,
     "UnknownVotedCount": 1728,
-    "InPersonCount": 170958,
+    "InPersonCount": 170957,
     "MailCount": 66674,
-    "InPersonDem": 130555,
+    "InPersonDem": 130554,
     "InPersonRep": 39200,
     "MailDem": 56095,
     "MailRep": 10054,
     "DemOutCount": 10641,
     "RepOutCount": 1761,
     "UnknownOutCount": 123,
-    "VotedCount": 237632,
+    "VotedCount": 237631,
     "OutCount": 12525
   },
   {
@@ -724,9 +724,9 @@
     "TotalMatchedVoters": 18297,
     "DemVotedCount": 7111,
     "RepVotedCount": 10345,
-    "UnknownVotedCount": 100,
+    "UnknownVotedCount": 99,
     "InPersonCount": 14729,
-    "MailCount": 2827,
+    "MailCount": 2826,
     "InPersonDem": 5556,
     "InPersonRep": 9095,
     "MailDem": 1555,
@@ -734,7 +734,7 @@
     "DemOutCount": 261,
     "RepOutCount": 346,
     "UnknownOutCount": 1,
-    "VotedCount": 17556,
+    "VotedCount": 17555,
     "OutCount": 608
   },
   {
@@ -991,7 +991,7 @@
   },
   {
     "CountyName": "Hampton (City)",
-    "TotalMatchedVoters": 23480,
+    "TotalMatchedVoters": 23481,
     "DemVotedCount": 18206,
     "RepVotedCount": 3690,
     "UnknownVotedCount": 141,
@@ -1369,7 +1369,7 @@
   },
   {
     "CountyName": "Manassas Park (City)",
-    "TotalMatchedVoters": 2411,
+    "TotalMatchedVoters": 2412,
     "DemVotedCount": 1612,
     "RepVotedCount": 627,
     "UnknownVotedCount": 23,
@@ -1801,7 +1801,7 @@
   },
   {
     "CountyName": "Prince William",
-    "TotalMatchedVoters": 97519,
+    "TotalMatchedVoters": 97523,
     "DemVotedCount": 62955,
     "RepVotedCount": 28191,
     "UnknownVotedCount": 637,
@@ -1937,11 +1937,11 @@
     "InPersonRep": 3699,
     "MailDem": 2484,
     "MailRep": 747,
-    "DemOutCount": 554,
-    "RepOutCount": 209,
-    "UnknownOutCount": 4,
+    "DemOutCount": 542,
+    "RepOutCount": 205,
+    "UnknownOutCount": 3,
     "VotedCount": 15827,
-    "OutCount": 767
+    "OutCount": 750
   },
   {
     "CountyName": "Rockbridge",
