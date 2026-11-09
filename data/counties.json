@@ -83,11 +83,11 @@
     "InPersonRep": 1874,
     "MailDem": 162,
     "MailRep": 128,
-    "DemOutCount": 24,
-    "RepOutCount": 38,
+    "DemOutCount": 23,
+    "RepOutCount": 37,
     "UnknownOutCount": 1,
     "VotedCount": 2933,
-    "OutCount": 63
+    "OutCount": 61
   },
   {
     "CountyName": "Amherst",
@@ -1027,7 +1027,7 @@
   },
   {
     "CountyName": "Harrisonburg (City)",
-    "TotalMatchedVoters": 6994,
+    "TotalMatchedVoters": 6993,
     "DemVotedCount": 4919,
     "RepVotedCount": 1744,
     "UnknownVotedCount": 75,
@@ -1037,11 +1037,11 @@
     "InPersonRep": 1588,
     "MailDem": 612,
     "MailRep": 156,
-    "DemOutCount": 140,
+    "DemOutCount": 139,
     "RepOutCount": 39,
     "UnknownOutCount": 1,
     "VotedCount": 6738,
-    "OutCount": 180
+    "OutCount": 179
   },
   {
     "CountyName": "Henrico",

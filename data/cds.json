@@ -8,7 +8,7 @@
   "districts": [
     {
       "CD": "01",
-      "TotalMatchedVoters": 214061,
+      "TotalMatchedVoters": 214054,
       "DemVotedCount": 104121,
       "RepVotedCount": 100881,
       "UnknownVotedCount": 1128,
@@ -18,17 +18,17 @@
       "InPersonRep": 87582,
       "MailDem": 24269,
       "MailRep": 13299,
-      "DemOutCount": 3685,
+      "DemOutCount": 3683,
       "RepOutCount": 2550,
       "UnknownOutCount": 40,
       "VotedCount": 206130,
-      "OutCount": 6275,
+      "OutCount": 6273,
       "CountyCount": 78,
       "Target": true
     },
     {
       "CD": "02",
-      "TotalMatchedVoters": 168421,
+      "TotalMatchedVoters": 168417,
       "DemVotedCount": 89356,
       "RepVotedCount": 69218,
       "UnknownVotedCount": 1029,
@@ -38,37 +38,37 @@
       "InPersonRep": 56079,
       "MailDem": 25301,
       "MailRep": 13139,
-      "DemOutCount": 4404,
+      "DemOutCount": 4402,
       "RepOutCount": 2808,
       "UnknownOutCount": 53,
       "VotedCount": 159603,
-      "OutCount": 7265,
+      "OutCount": 7263,
       "CountyCount": 47,
       "Target": true
     },
     {
       "CD": "03",
-      "TotalMatchedVoters": 110815,
-      "DemVotedCount": 81354,
+      "TotalMatchedVoters": 110818,
+      "DemVotedCount": 81355,
       "RepVotedCount": 20742,
       "UnknownVotedCount": 633,
       "InPersonCount": 75421,
-      "MailCount": 27308,
+      "MailCount": 27309,
       "InPersonDem": 58638,
       "InPersonRep": 16284,
-      "MailDem": 22716,
+      "MailDem": 22717,
       "MailRep": 4458,
       "DemOutCount": 5197,
       "RepOutCount": 1199,
       "UnknownOutCount": 52,
-      "VotedCount": 102729,
+      "VotedCount": 102730,
       "OutCount": 6448,
-      "CountyCount": 46,
+      "CountyCount": 47,
       "Target": false
     },
     {
       "CD": "04",
-      "TotalMatchedVoters": 150465,
+      "TotalMatchedVoters": 150467,
       "DemVotedCount": 106036,
       "RepVotedCount": 35759,
       "UnknownVotedCount": 887,
@@ -78,17 +78,17 @@
       "InPersonRep": 30689,
       "MailDem": 22743,
       "MailRep": 5070,
-      "DemOutCount": 5218,
-      "RepOutCount": 1210,
+      "DemOutCount": 5223,
+      "RepOutCount": 1211,
       "UnknownOutCount": 42,
       "VotedCount": 142682,
-      "OutCount": 6470,
+      "OutCount": 6476,
       "CountyCount": 75,
       "Target": false
     },
     {
       "CD": "05",
-      "TotalMatchedVoters": 170111,
+      "TotalMatchedVoters": 170122,
       "DemVotedCount": 85451,
       "RepVotedCount": 77070,
       "UnknownVotedCount": 933,
@@ -98,8 +98,8 @@
       "InPersonRep": 67533,
       "MailDem": 19327,
       "MailRep": 9537,
-      "DemOutCount": 3058,
-      "RepOutCount": 2333,
+      "DemOutCount": 3057,
+      "RepOutCount": 2334,
       "UnknownOutCount": 44,
       "VotedCount": 163454,
       "OutCount": 5435,
@@ -108,7 +108,7 @@
     },
     {
       "CD": "06",
-      "TotalMatchedVoters": 145725,
+      "TotalMatchedVoters": 145729,
       "DemVotedCount": 62081,
       "RepVotedCount": 77264,
       "UnknownVotedCount": 857,
@@ -118,37 +118,37 @@
       "InPersonRep": 68073,
       "MailDem": 12631,
       "MailRep": 9191,
-      "DemOutCount": 2037,
+      "DemOutCount": 2035,
       "RepOutCount": 2416,
       "UnknownOutCount": 33,
       "VotedCount": 140202,
-      "OutCount": 4486,
+      "OutCount": 4484,
       "CountyCount": 72,
       "Target": false
     },
     {
       "CD": "07",
-      "TotalMatchedVoters": 155949,
-      "DemVotedCount": 90793,
+      "TotalMatchedVoters": 155944,
+      "DemVotedCount": 90792,
       "RepVotedCount": 55823,
       "UnknownVotedCount": 951,
       "InPersonCount": 113947,
-      "MailCount": 33620,
+      "MailCount": 33619,
       "InPersonDem": 67079,
       "InPersonRep": 46144,
-      "MailDem": 23714,
+      "MailDem": 23713,
       "MailRep": 9679,
       "DemOutCount": 4510,
-      "RepOutCount": 2383,
+      "RepOutCount": 2381,
       "UnknownOutCount": 52,
-      "VotedCount": 147567,
-      "OutCount": 6945,
+      "VotedCount": 147566,
+      "OutCount": 6943,
       "CountyCount": 53,
       "Target": false
     },
     {
       "CD": "08",
-      "TotalMatchedVoters": 172096,
+      "TotalMatchedVoters": 172087,
       "DemVotedCount": 137236,
       "RepVotedCount": 22420,
       "UnknownVotedCount": 1749,
@@ -158,17 +158,17 @@
       "InPersonRep": 17632,
       "MailDem": 37712,
       "MailRep": 4788,
-      "DemOutCount": 7267,
+      "DemOutCount": 7264,
       "RepOutCount": 869,
       "UnknownOutCount": 83,
       "VotedCount": 161405,
-      "OutCount": 8219,
+      "OutCount": 8216,
       "CountyCount": 49,
       "Target": false
     },
     {
       "CD": "09",
-      "TotalMatchedVoters": 125473,
+      "TotalMatchedVoters": 125499,
       "DemVotedCount": 43074,
       "RepVotedCount": 76548,
       "UnknownVotedCount": 654,
@@ -178,17 +178,17 @@
       "InPersonRep": 67487,
       "MailDem": 9736,
       "MailRep": 9061,
-      "DemOutCount": 1477,
-      "RepOutCount": 2806,
+      "DemOutCount": 1487,
+      "RepOutCount": 2805,
       "UnknownOutCount": 35,
       "VotedCount": 120276,
-      "OutCount": 4318,
-      "CountyCount": 66,
+      "OutCount": 4327,
+      "CountyCount": 70,
       "Target": false
     },
     {
       "CD": "10",
-      "TotalMatchedVoters": 173340,
+      "TotalMatchedVoters": 173328,
       "DemVotedCount": 99622,
       "RepVotedCount": 62338,
       "UnknownVotedCount": 1121,
@@ -198,17 +198,17 @@
       "InPersonRep": 50849,
       "MailDem": 26635,
       "MailRep": 11489,
-      "DemOutCount": 5167,
+      "DemOutCount": 5163,
       "RepOutCount": 2695,
       "UnknownOutCount": 63,
       "VotedCount": 163081,
-      "OutCount": 7925,
+      "OutCount": 7921,
       "CountyCount": 41,
       "Target": false
     },
     {
       "CD": "11",
-      "TotalMatchedVoters": 181540,
+      "TotalMatchedVoters": 181530,
       "DemVotedCount": 133524,
       "RepVotedCount": 35517,
       "UnknownVotedCount": 1220,
@@ -218,11 +218,11 @@
       "InPersonRep": 28376,
       "MailDem": 39831,
       "MailRep": 7141,
-      "DemOutCount": 7525,
+      "DemOutCount": 7522,
       "RepOutCount": 1269,
       "UnknownOutCount": 90,
       "VotedCount": 170261,
-      "OutCount": 8884,
+      "OutCount": 8881,
       "CountyCount": 42,
       "Target": false
     }
@@ -250,7 +250,7 @@
     {
       "CD": "01",
       "CountyName": "Chesterfield",
-      "TotalMatchedVoters": 51582,
+      "TotalMatchedVoters": 51577,
       "DemVotedCount": 27184,
       "RepVotedCount": 22433,
       "UnknownVotedCount": 281,
@@ -345,7 +345,7 @@
     {
       "CD": "01",
       "CountyName": "Henrico",
-      "TotalMatchedVoters": 40287,
+      "TotalMatchedVoters": 40286,
       "DemVotedCount": 24619,
       "RepVotedCount": 13002,
       "UnknownVotedCount": 217,
@@ -355,11 +355,11 @@
       "InPersonRep": 10004,
       "MailDem": 7356,
       "MailRep": 2998,
-      "DemOutCount": 1349,
+      "DemOutCount": 1348,
       "RepOutCount": 572,
       "UnknownOutCount": 14,
       "VotedCount": 37838,
-      "OutCount": 1935
+      "OutCount": 1934
     },
     {
       "CD": "01",
@@ -687,7 +687,7 @@
     {
       "CD": "01",
       "CountyName": "York",
-      "TotalMatchedVoters": 20639,
+      "TotalMatchedVoters": 20638,
       "DemVotedCount": 9350,
       "RepVotedCount": 10426,
       "UnknownVotedCount": 145,
@@ -697,11 +697,11 @@
       "InPersonRep": 9446,
       "MailDem": 1739,
       "MailRep": 980,
-      "DemOutCount": 308,
+      "DemOutCount": 307,
       "RepOutCount": 236,
       "UnknownOutCount": 7,
       "VotedCount": 19921,
-      "OutCount": 551
+      "OutCount": 550
     },
     {
       "CD": "02",
@@ -725,7 +725,7 @@
     {
       "CD": "02",
       "CountyName": "Chesapeake (City)",
-      "TotalMatchedVoters": 32530,
+      "TotalMatchedVoters": 32529,
       "DemVotedCount": 15253,
       "RepVotedCount": 15598,
       "UnknownVotedCount": 184,
@@ -915,7 +915,7 @@
     {
       "CD": "02",
       "CountyName": "Virginia Beach (City)",
-      "TotalMatchedVoters": 91571,
+      "TotalMatchedVoters": 91568,
       "DemVotedCount": 48730,
       "RepVotedCount": 37072,
       "UnknownVotedCount": 568,
@@ -925,11 +925,11 @@
       "InPersonRep": 28856,
       "MailDem": 16055,
       "MailRep": 8216,
-      "DemOutCount": 2731,
+      "DemOutCount": 2729,
       "RepOutCount": 1644,
       "UnknownOutCount": 29,
       "VotedCount": 86370,
-      "OutCount": 4404
+      "OutCount": 4402
     },
     {
       "CD": "03",
@@ -953,7 +953,7 @@
     {
       "CD": "03",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 19,
+      "TotalMatchedVoters": 20,
       "DemVotedCount": 8,
       "RepVotedCount": 1,
       "UnknownVotedCount": 0,
@@ -972,7 +972,7 @@
     {
       "CD": "03",
       "CountyName": "Hampton (City)",
-      "TotalMatchedVoters": 23417,
+      "TotalMatchedVoters": 23416,
       "DemVotedCount": 18175,
       "RepVotedCount": 3686,
       "UnknownVotedCount": 141,
@@ -1086,7 +1086,7 @@
     {
       "CD": "04",
       "CountyName": "Albemarle",
-      "TotalMatchedVoters": 14,
+      "TotalMatchedVoters": 16,
       "DemVotedCount": 8,
       "RepVotedCount": 2,
       "UnknownVotedCount": 0,
@@ -1096,11 +1096,11 @@
       "InPersonRep": 2,
       "MailDem": 2,
       "MailRep": 0,
-      "DemOutCount": 1,
+      "DemOutCount": 3,
       "RepOutCount": 0,
       "UnknownOutCount": 0,
       "VotedCount": 10,
-      "OutCount": 1
+      "OutCount": 3
     },
     {
       "CD": "04",
@@ -1143,7 +1143,7 @@
     {
       "CD": "04",
       "CountyName": "Chesterfield",
-      "TotalMatchedVoters": 45480,
+      "TotalMatchedVoters": 45479,
       "DemVotedCount": 28547,
       "RepVotedCount": 14850,
       "UnknownVotedCount": 262,
@@ -1153,11 +1153,11 @@
       "InPersonRep": 12799,
       "MailDem": 5747,
       "MailRep": 2051,
-      "DemOutCount": 1211,
+      "DemOutCount": 1210,
       "RepOutCount": 414,
       "UnknownOutCount": 11,
       "VotedCount": 43659,
-      "OutCount": 1636
+      "OutCount": 1635
     },
     {
       "CD": "04",
@@ -1219,7 +1219,7 @@
     {
       "CD": "04",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 56,
+      "TotalMatchedVoters": 58,
       "DemVotedCount": 25,
       "RepVotedCount": 2,
       "UnknownVotedCount": 0,
@@ -1229,11 +1229,11 @@
       "InPersonRep": 2,
       "MailDem": 5,
       "MailRep": 0,
-      "DemOutCount": 9,
+      "DemOutCount": 11,
       "RepOutCount": 0,
       "UnknownOutCount": 0,
       "VotedCount": 27,
-      "OutCount": 9
+      "OutCount": 11
     },
     {
       "CD": "04",
@@ -1276,7 +1276,7 @@
     {
       "CD": "04",
       "CountyName": "Henrico",
-      "TotalMatchedVoters": 32153,
+      "TotalMatchedVoters": 32152,
       "DemVotedCount": 25719,
       "RepVotedCount": 4696,
       "UnknownVotedCount": 154,
@@ -1314,7 +1314,7 @@
     {
       "CD": "04",
       "CountyName": "Loudoun",
-      "TotalMatchedVoters": 31,
+      "TotalMatchedVoters": 32,
       "DemVotedCount": 6,
       "RepVotedCount": 4,
       "UnknownVotedCount": 0,
@@ -1324,11 +1324,11 @@
       "InPersonRep": 4,
       "MailDem": 2,
       "MailRep": 0,
-      "DemOutCount": 2,
+      "DemOutCount": 3,
       "RepOutCount": 1,
       "UnknownOutCount": 0,
       "VotedCount": 10,
-      "OutCount": 3
+      "OutCount": 4
     },
     {
       "CD": "04",
@@ -1390,7 +1390,7 @@
     {
       "CD": "04",
       "CountyName": "Richmond (City)",
-      "TotalMatchedVoters": 37607,
+      "TotalMatchedVoters": 37605,
       "DemVotedCount": 31507,
       "RepVotedCount": 3338,
       "UnknownVotedCount": 280,
@@ -1485,7 +1485,7 @@
     {
       "CD": "05",
       "CountyName": "Albemarle",
-      "TotalMatchedVoters": 30205,
+      "TotalMatchedVoters": 30202,
       "DemVotedCount": 22245,
       "RepVotedCount": 6487,
       "UnknownVotedCount": 202,
@@ -1495,11 +1495,11 @@
       "InPersonRep": 5493,
       "MailDem": 5418,
       "MailRep": 994,
-      "DemOutCount": 816,
+      "DemOutCount": 814,
       "RepOutCount": 222,
       "UnknownOutCount": 14,
       "VotedCount": 28934,
-      "OutCount": 1052
+      "OutCount": 1050
     },
     {
       "CD": "05",
@@ -1514,11 +1514,11 @@
       "InPersonRep": 1872,
       "MailDem": 162,
       "MailRep": 128,
-      "DemOutCount": 24,
-      "RepOutCount": 38,
+      "DemOutCount": 23,
+      "RepOutCount": 37,
       "UnknownOutCount": 1,
       "VotedCount": 2929,
-      "OutCount": 63
+      "OutCount": 61
     },
     {
       "CD": "05",
@@ -1637,7 +1637,7 @@
     {
       "CD": "05",
       "CountyName": "Charlottesville (City)",
-      "TotalMatchedVoters": 11202,
+      "TotalMatchedVoters": 11203,
       "DemVotedCount": 9869,
       "RepVotedCount": 760,
       "UnknownVotedCount": 120,
@@ -1656,7 +1656,7 @@
     {
       "CD": "05",
       "CountyName": "Chesterfield",
-      "TotalMatchedVoters": 27,
+      "TotalMatchedVoters": 32,
       "DemVotedCount": 9,
       "RepVotedCount": 10,
       "UnknownVotedCount": 0,
@@ -1713,7 +1713,7 @@
     {
       "CD": "05",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 48,
+      "TotalMatchedVoters": 49,
       "DemVotedCount": 20,
       "RepVotedCount": 5,
       "UnknownVotedCount": 0,
@@ -1789,7 +1789,7 @@
     {
       "CD": "05",
       "CountyName": "Hanover",
-      "TotalMatchedVoters": 3870,
+      "TotalMatchedVoters": 3869,
       "DemVotedCount": 1351,
       "RepVotedCount": 2338,
       "UnknownVotedCount": 8,
@@ -1808,7 +1808,7 @@
     {
       "CD": "05",
       "CountyName": "Henrico",
-      "TotalMatchedVoters": 32,
+      "TotalMatchedVoters": 33,
       "DemVotedCount": 13,
       "RepVotedCount": 6,
       "UnknownVotedCount": 0,
@@ -1818,16 +1818,16 @@
       "InPersonRep": 4,
       "MailDem": 5,
       "MailRep": 2,
-      "DemOutCount": 2,
+      "DemOutCount": 3,
       "RepOutCount": 0,
       "UnknownOutCount": 0,
       "VotedCount": 19,
-      "OutCount": 2
+      "OutCount": 3
     },
     {
       "CD": "05",
       "CountyName": "Loudoun",
-      "TotalMatchedVoters": 30,
+      "TotalMatchedVoters": 32,
       "DemVotedCount": 13,
       "RepVotedCount": 6,
       "UnknownVotedCount": 1,
@@ -1837,11 +1837,11 @@
       "InPersonRep": 5,
       "MailDem": 5,
       "MailRep": 1,
-      "DemOutCount": 0,
+      "DemOutCount": 1,
       "RepOutCount": 1,
       "UnknownOutCount": 0,
       "VotedCount": 20,
-      "OutCount": 1
+      "OutCount": 2
     },
     {
       "CD": "05",
@@ -1884,7 +1884,7 @@
     {
       "CD": "05",
       "CountyName": "Lynchburg (City)",
-      "TotalMatchedVoters": 13875,
+      "TotalMatchedVoters": 13874,
       "DemVotedCount": 7273,
       "RepVotedCount": 5788,
       "UnknownVotedCount": 96,
@@ -1895,10 +1895,10 @@
       "MailDem": 1834,
       "MailRep": 1018,
       "DemOutCount": 355,
-      "RepOutCount": 285,
+      "RepOutCount": 284,
       "UnknownOutCount": 4,
       "VotedCount": 13157,
-      "OutCount": 644
+      "OutCount": 643
     },
     {
       "CD": "05",
@@ -2055,7 +2055,7 @@
     {
       "CD": "05",
       "CountyName": "Richmond (City)",
-      "TotalMatchedVoters": 30,
+      "TotalMatchedVoters": 31,
       "DemVotedCount": 15,
       "RepVotedCount": 0,
       "UnknownVotedCount": 1,
@@ -2074,7 +2074,7 @@
     {
       "CD": "05",
       "CountyName": "Spotsylvania",
-      "TotalMatchedVoters": 15,
+      "TotalMatchedVoters": 16,
       "DemVotedCount": 1,
       "RepVotedCount": 11,
       "UnknownVotedCount": 0,
@@ -2085,10 +2085,10 @@
       "MailDem": 0,
       "MailRep": 4,
       "DemOutCount": 0,
-      "RepOutCount": 0,
+      "RepOutCount": 1,
       "UnknownOutCount": 0,
       "VotedCount": 12,
-      "OutCount": 0
+      "OutCount": 1
     },
     {
       "CD": "05",
@@ -2245,7 +2245,7 @@
     {
       "CD": "06",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 52,
+      "TotalMatchedVoters": 55,
       "DemVotedCount": 25,
       "RepVotedCount": 2,
       "UnknownVotedCount": 0,
@@ -2283,7 +2283,7 @@
     {
       "CD": "06",
       "CountyName": "Harrisonburg (City)",
-      "TotalMatchedVoters": 6889,
+      "TotalMatchedVoters": 6888,
       "DemVotedCount": 4874,
       "RepVotedCount": 1738,
       "UnknownVotedCount": 75,
@@ -2293,11 +2293,11 @@
       "InPersonRep": 1584,
       "MailDem": 609,
       "MailRep": 154,
-      "DemOutCount": 136,
+      "DemOutCount": 135,
       "RepOutCount": 38,
       "UnknownOutCount": 1,
       "VotedCount": 6687,
-      "OutCount": 175
+      "OutCount": 174
     },
     {
       "CD": "06",
@@ -2397,7 +2397,7 @@
     {
       "CD": "06",
       "CountyName": "Prince William",
-      "TotalMatchedVoters": 18,
+      "TotalMatchedVoters": 19,
       "DemVotedCount": 7,
       "RepVotedCount": 4,
       "UnknownVotedCount": 0,
@@ -2587,7 +2587,7 @@
     {
       "CD": "06",
       "CountyName": "Winchester (City)",
-      "TotalMatchedVoters": 5090,
+      "TotalMatchedVoters": 5089,
       "DemVotedCount": 2919,
       "RepVotedCount": 1969,
       "UnknownVotedCount": 38,
@@ -2597,11 +2597,11 @@
       "InPersonRep": 1765,
       "MailDem": 463,
       "MailRep": 204,
-      "DemOutCount": 88,
+      "DemOutCount": 87,
       "RepOutCount": 45,
       "UnknownOutCount": 1,
       "VotedCount": 4926,
-      "OutCount": 134
+      "OutCount": 133
     },
     {
       "CD": "07",
@@ -2663,26 +2663,26 @@
     {
       "CD": "07",
       "CountyName": "Caroline",
-      "TotalMatchedVoters": 5668,
-      "DemVotedCount": 2984,
+      "TotalMatchedVoters": 5667,
+      "DemVotedCount": 2983,
       "RepVotedCount": 2361,
       "UnknownVotedCount": 28,
       "InPersonCount": 4366,
-      "MailCount": 1007,
+      "MailCount": 1006,
       "InPersonDem": 2292,
       "InPersonRep": 2054,
-      "MailDem": 692,
+      "MailDem": 691,
       "MailRep": 307,
       "DemOutCount": 132,
       "RepOutCount": 120,
       "UnknownOutCount": 1,
-      "VotedCount": 5373,
+      "VotedCount": 5372,
       "OutCount": 253
     },
     {
       "CD": "07",
       "CountyName": "Culpeper",
-      "TotalMatchedVoters": 10317,
+      "TotalMatchedVoters": 10316,
       "DemVotedCount": 4432,
       "RepVotedCount": 5344,
       "UnknownVotedCount": 69,
@@ -2796,7 +2796,7 @@
     {
       "CD": "07",
       "CountyName": "Orange",
-      "TotalMatchedVoters": 7291,
+      "TotalMatchedVoters": 7290,
       "DemVotedCount": 3170,
       "RepVotedCount": 3692,
       "UnknownVotedCount": 34,
@@ -2807,10 +2807,10 @@
       "MailDem": 889,
       "MailRep": 619,
       "DemOutCount": 143,
-      "RepOutCount": 189,
+      "RepOutCount": 188,
       "UnknownOutCount": 3,
       "VotedCount": 6896,
-      "OutCount": 335
+      "OutCount": 334
     },
     {
       "CD": "07",
@@ -2853,7 +2853,7 @@
     {
       "CD": "07",
       "CountyName": "Spotsylvania",
-      "TotalMatchedVoters": 30073,
+      "TotalMatchedVoters": 30072,
       "DemVotedCount": 15316,
       "RepVotedCount": 13259,
       "UnknownVotedCount": 165,
@@ -2864,15 +2864,15 @@
       "MailDem": 4119,
       "MailRep": 2218,
       "DemOutCount": 594,
-      "RepOutCount": 534,
+      "RepOutCount": 533,
       "UnknownOutCount": 6,
       "VotedCount": 28740,
-      "OutCount": 1134
+      "OutCount": 1133
     },
     {
       "CD": "07",
       "CountyName": "Stafford",
-      "TotalMatchedVoters": 28989,
+      "TotalMatchedVoters": 28988,
       "DemVotedCount": 16160,
       "RepVotedCount": 10896,
       "UnknownVotedCount": 186,
@@ -2891,7 +2891,7 @@
     {
       "CD": "08",
       "CountyName": "Alexandria (City)",
-      "TotalMatchedVoters": 37628,
+      "TotalMatchedVoters": 37626,
       "DemVotedCount": 31080,
       "RepVotedCount": 3880,
       "UnknownVotedCount": 471,
@@ -2910,7 +2910,7 @@
     {
       "CD": "08",
       "CountyName": "Arlington",
-      "TotalMatchedVoters": 55637,
+      "TotalMatchedVoters": 55632,
       "DemVotedCount": 46523,
       "RepVotedCount": 4996,
       "UnknownVotedCount": 686,
@@ -2920,11 +2920,11 @@
       "InPersonRep": 3837,
       "MailDem": 12214,
       "MailRep": 1159,
-      "DemOutCount": 2411,
+      "DemOutCount": 2409,
       "RepOutCount": 232,
       "UnknownOutCount": 29,
       "VotedCount": 52205,
-      "OutCount": 2672
+      "OutCount": 2670
     },
     {
       "CD": "08",
@@ -2948,7 +2948,7 @@
     {
       "CD": "08",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 72834,
+      "TotalMatchedVoters": 72832,
       "DemVotedCount": 54812,
       "RepVotedCount": 12891,
       "UnknownVotedCount": 534,
@@ -2958,11 +2958,11 @@
       "InPersonRep": 10209,
       "MailDem": 16507,
       "MailRep": 2682,
-      "DemOutCount": 3165,
+      "DemOutCount": 3164,
       "RepOutCount": 463,
       "UnknownOutCount": 33,
       "VotedCount": 68237,
-      "OutCount": 3661
+      "OutCount": 3660
     },
     {
       "CD": "08",
@@ -3195,7 +3195,7 @@
     {
       "CD": "09",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 38,
+      "TotalMatchedVoters": 43,
       "DemVotedCount": 10,
       "RepVotedCount": 2,
       "UnknownVotedCount": 0,
@@ -3205,11 +3205,11 @@
       "InPersonRep": 2,
       "MailDem": 5,
       "MailRep": 0,
-      "DemOutCount": 3,
+      "DemOutCount": 5,
       "RepOutCount": 0,
       "UnknownOutCount": 1,
       "VotedCount": 12,
-      "OutCount": 4
+      "OutCount": 6
     },
     {
       "CD": "09",
@@ -3346,6 +3346,25 @@
     },
     {
       "CD": "09",
+      "CountyName": "Loudoun",
+      "TotalMatchedVoters": 21,
+      "DemVotedCount": 4,
+      "RepVotedCount": 3,
+      "UnknownVotedCount": 0,
+      "InPersonCount": 2,
+      "MailCount": 5,
+      "InPersonDem": 1,
+      "InPersonRep": 1,
+      "MailDem": 3,
+      "MailRep": 2,
+      "DemOutCount": 3,
+      "RepOutCount": 0,
+      "UnknownOutCount": 0,
+      "VotedCount": 7,
+      "OutCount": 3
+    },
+    {
+      "CD": "09",
       "CountyName": "Martinsville (City)",
       "TotalMatchedVoters": 2083,
       "DemVotedCount": 1327,
@@ -3461,7 +3480,7 @@
     {
       "CD": "09",
       "CountyName": "Roanoke",
-      "TotalMatchedVoters": 10681,
+      "TotalMatchedVoters": 10680,
       "DemVotedCount": 4547,
       "RepVotedCount": 5744,
       "UnknownVotedCount": 46,
@@ -3472,10 +3491,10 @@
       "MailDem": 963,
       "MailRep": 766,
       "DemOutCount": 134,
-      "RepOutCount": 158,
+      "RepOutCount": 157,
       "UnknownOutCount": 1,
       "VotedCount": 10337,
-      "OutCount": 293
+      "OutCount": 292
     },
     {
       "CD": "09",
@@ -3689,7 +3708,7 @@
     {
       "CD": "10",
       "CountyName": "Loudoun",
-      "TotalMatchedVoters": 93218,
+      "TotalMatchedVoters": 93210,
       "DemVotedCount": 58282,
       "RepVotedCount": 28293,
       "UnknownVotedCount": 659,
@@ -3699,16 +3718,16 @@
       "InPersonRep": 22415,
       "MailDem": 15971,
       "MailRep": 5878,
-      "DemOutCount": 3138,
+      "DemOutCount": 3135,
       "RepOutCount": 1367,
       "UnknownOutCount": 39,
       "VotedCount": 87234,
-      "OutCount": 4544
+      "OutCount": 4541
     },
     {
       "CD": "10",
       "CountyName": "Manassas (City)",
-      "TotalMatchedVoters": 6871,
+      "TotalMatchedVoters": 6870,
       "DemVotedCount": 4307,
       "RepVotedCount": 2125,
       "UnknownVotedCount": 44,
@@ -3727,7 +3746,7 @@
     {
       "CD": "10",
       "CountyName": "Manassas Park (City)",
-      "TotalMatchedVoters": 2403,
+      "TotalMatchedVoters": 2402,
       "DemVotedCount": 1608,
       "RepVotedCount": 626,
       "UnknownVotedCount": 23,
@@ -3737,11 +3756,11 @@
       "InPersonRep": 532,
       "MailDem": 378,
       "MailRep": 94,
-      "DemOutCount": 99,
+      "DemOutCount": 98,
       "RepOutCount": 25,
       "UnknownOutCount": 1,
       "VotedCount": 2257,
-      "OutCount": 125
+      "OutCount": 124
     },
     {
       "CD": "10",
@@ -3765,7 +3784,7 @@
     {
       "CD": "10",
       "CountyName": "Prince William",
-      "TotalMatchedVoters": 44521,
+      "TotalMatchedVoters": 44519,
       "DemVotedCount": 23953,
       "RepVotedCount": 17890,
       "UnknownVotedCount": 268,
@@ -3917,7 +3936,7 @@
     {
       "CD": "11",
       "CountyName": "Fairfax",
-      "TotalMatchedVoters": 174326,
+      "TotalMatchedVoters": 174316,
       "DemVotedCount": 128355,
       "RepVotedCount": 34119,
       "UnknownVotedCount": 1173,
@@ -3927,11 +3946,11 @@
       "InPersonRep": 27146,
       "MailDem": 38621,
       "MailRep": 6973,
-      "DemOutCount": 7262,
+      "DemOutCount": 7259,
       "RepOutCount": 1224,
       "UnknownOutCount": 87,
       "VotedCount": 163647,
-      "OutCount": 8573
+      "OutCount": 8570
     },
     {
       "CD": "11",

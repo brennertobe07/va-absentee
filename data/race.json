@@ -37,7 +37,7 @@
           "Unmatched": 500
         },
         "03": {
-          "White": 52701,
+          "White": 52702,
           "Black": 45155,
           "Hispanic": 2267,
           "API": 1168,
@@ -69,7 +69,7 @@
           "Unmatched": 388
         },
         "07": {
-          "White": 100001,
+          "White": 100000,
           "Black": 28238,
           "Hispanic": 10541,
           "API": 5631,
@@ -323,8 +323,8 @@
           "Unmatched": 1406
         }
       },
-      "through": "2025-11-08",
-      "days_out": -4
+      "through": "2025-11-09",
+      "days_out": -5
     },
     "REG": {
       "label": "Registered",
