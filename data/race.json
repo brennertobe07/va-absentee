@@ -226,7 +226,7 @@
     "G25": {
       "label": "2025 General",
       "statewide": {
-        "White": 1156682,
+        "White": 1156683,
         "Black": 179411,
         "Hispanic": 45685,
         "API": 67430,
@@ -299,7 +299,7 @@
           "Unmatched": 1545
         },
         "09": {
-          "White": 106073,
+          "White": 106074,
           "Black": 2588,
           "Hispanic": 580,
           "API": 730,
@@ -323,8 +323,8 @@
           "Unmatched": 1406
         }
       },
-      "through": "2025-11-19",
-      "days_out": -15
+      "through": "2025-11-20",
+      "days_out": -16
     },
     "REG": {
       "label": "Registered",
