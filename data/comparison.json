@@ -2088,6 +2088,19 @@
           "in_person_rep": 536728,
           "mail_dem": 264615,
           "mail_rep": 96852
+        },
+        {
+          "days_before": -18,
+          "total_voted": 1677394,
+          "in_person": 1313435,
+          "mail": 363959,
+          "dem_voted": 1032652,
+          "rep_voted": 633580,
+          "unknown_voted": 11162,
+          "in_person_dem": 768037,
+          "in_person_rep": 536728,
+          "mail_dem": 264615,
+          "mail_rep": 96852
         }
       ]
     }
@@ -2095,7 +2108,7 @@
   "current_election": "26Gen",
   "summary": {
     "current_election": "26Gen",
-    "current_day": -17,
+    "current_day": -18,
     "current_voted": 1677394,
     "prior_comparisons": [
       {
@@ -2114,5 +2127,5 @@
       }
     ]
   },
-  "generated_at": "2026-11-20 07:01"
+  "generated_at": "2026-11-21 07:01"
 }
